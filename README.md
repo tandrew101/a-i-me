@@ -2,7 +2,7 @@
 
 A local analytical layer built on hardware you own, running inference you control, over data that never leaves your network without explicit permission.
 
-Built by a power systems engineer / project manager who realized the architecture behind his day job was too powerful an idea to leave at work.
+Built by a power systems engineer who realized the architecture behind his day job was too useful an idea to leave at work.
 
 *Planning to build this yourself? Jump to [For Builders](#for-builders).*
 
@@ -14,10 +14,8 @@ Built by a power systems engineer / project manager who realized the architectur
 > 2. *Aim me* — give me direction.
 > 3. *AI me* — let AI process me, make me legible to myself.
 >
-> The deeper idea: the mess is fine. AI does not need your data to be clean or
-> organized to work with it. AiMe takes on the administrative layer of adult life —
-> the tracking, the filing, the remembering, the following up — so your mind can
-> focus on the parts of life that actually require a human.
+> The deeper idea: the mess is fine. AI does not need your data to be clean or organized to work with it. AiMe takes on the administrative layer of adult life — the tracking, the filing, the remembering, the following up — so your mind can focus on the parts of life that actually require a human.
+>
 > The name is settled. The project is not going anywhere.
 
 ---
@@ -26,221 +24,150 @@ Built by a power systems engineer / project manager who realized the architectur
 
 | | | |
 |---|---|---|
-| [The Core Idea](#the-core-idea) | [Why Build This](#why-build-this) | [Current State](#current-state) |
-| [Core Use Cases](#core-use-cases) | [How It Works](#how-it-works) | [Documents](#documents) |
-| | [Philosophy](#philosophy) | [For Builders](#for-builders) |
+| [The Core Idea](#the-core-idea) | [Why It Works — The Routines Dashboard](#why-it-works--the-routines-dashboard) | [Core Use Cases](#core-use-cases) |
+| [Why Build This](#why-build-this) | [What We've Built](#what-weve-built) | [How It Works](#how-it-works) |
+| [Philosophy](#philosophy) | [Current State](#current-state) | [Documents](#documents) |
+| | [For Builders](#for-builders) | |
 
 ---
 
 ## The Core Idea
 
-### For power systems engineers
+**Getting Things Done** (GTD) is a productivity methodology with one core insight: your brain is a terrible reminder system. Every open loop — every task you need to remember, every commitment you've made, everything you need to do — occupies background processing cycles whether you're consciously thinking about it or not and more importantly, whether you can do anything about it in the moment or not. The overhead is invisible until you eliminate it. At that point, you wonder how you functioned before.
 
-**CYME** is commercial power systems analysis software used by utilities and engineering
-firms worldwide — it is the tool engineers open when they need to model an electric
-distribution system. **CYME Gateway** is the integration layer that automatically builds
-that model from real-world data sources so that the engineer does not have to build it
-by hand:
+Adult life generates an enormous number of open loops. Not just the obvious ones — the ones that slip. Recurring tasks at every cadence that feel low-priority until they become urgent, expire, or cost you money. Dozens of these accumulate and form a persistent background hum of *what am I forgetting?* that never fully goes away.
 
-- **GIS** (Geographic Information System) — asset locations, network topology, equipment specs
-- **SCADA** (Supervisory Control and Data Acquisition) — real-time operational state
-- **AMI** (Advanced Metering Infrastructure) — smart meter consumption and power quality data
+GTD solves this by feeding all of these open loops into a trusted system that captures these open loops, organizes them into contextual buckets, and then surfaces them at the right time. GTD is a system with a set of rules and how the actual system looks is really up to the person implementing it.
 
-Gateway ingests all of it, resolves conflicts, fills gaps, and hands you a queryable
-network model. The analytical tools — fault analysis, load flow, contingency simulation
-— plug into that model and run on top of it.
+AiMe fits the mold of this trusted system and even takes this a step further to even anticipate when some of these open loops could show up - giving you the information you need before you even need it.
 
-AiMe applies this exact architecture to a person instead of a power system:
+AiMe is what GTD looks like when you stop managing that system manually and build infrastructure around it instead. The capture is automated. The processing is AI-assisted. The execution is scripted. Open loops don't just get captured — they get handled. Not just less time spent, but cognitive overhead permanently removed.
 
-| CYME Gateway | Layer | AiMe |
+The routines dashboard is the concrete proof of this. See [Why It Works](#why-it-works--the-routines-dashboard) below.
+
+---
+
+## Why It Works — The Routines Dashboard
+
+The first building session to catalogue all the routines I have did something simple: mapped every recurring task in life. Not just the obvious ones — daily hygiene, weekly in-baskets — but the ones that slip. The bills that need to be paid. Car maintenance like rotating your tires or adding more windshield washer fluid. The canceled flight credit that will expire if you don't use it by a certain day. Every cadence from daily to annual. Almost 60 tasks in total (with even more being added they come to mind).
+
+Then an automation target was assigned to each one. Three categories emerged:
+
+| Bucket | What it means | Example |
 |---|---|---|
-| GIS, SCADA, AMI feeds | Data sources | Banks, health devices, email, calendar, photos |
-| Gateway ingestion layer | Collection perimeter | `relay` — Raspberry Pi |
-| CYME network model | Control plane | `gateway` — MacBook Air M1 |
-| Fault analysis, load flow, DMS | Analytical layers | Finance, GTD, Health, Travel, Media |
-| Compute servers | Heavy workloads | `compute` — MacBook Pro (on demand) |
-| SCADA historians / legacy systems | Data servers | `vault` — Windows, MS Money, RAG |
+| 🚫 Off your plate entirely | AiMe handles it end-to-end, confirms it happened | Monthly maintenance scripts run automatically; a notification sent only when something is off |
+| ⚡ Reduced to a confirmation tap | AiMe prepares everything, you approve | Rewards credit expiring in 7 days → one-tap reminder; you decide when to use it |
+| 🧠 Stays manual | Genuinely requires human judgment or physical presence | Tax planning/preparation, investment decisions, car maintenance |
 
-### For everyone else
+**The result, quantified:**
 
-Imagine you could build a complete, structured model of your own life — your finances,
-health, travel, communications, and habits — the same way engineers build a digital
-model of a power grid. Then imagine being able to ask that model questions and get
-real answers grounded in your actual data, not generic advice.
+| | Hours/year |
+|---|---|
+| Before AiMe — total recurring task overhead | ~380 |
+| Reclaimed at full deployment | ~195 |
+| Remaining (genuinely requires a human) | ~185 |
 
-That is what AiMe does.
+**≈5 forty-hour work weeks freed per year.** Not by working harder — by building a system that handles what doesn't require a human, and surfaces what does at exactly the right moment, in context, without having to remember to check.
 
-```
-Your data (banks, health devices, email, calendar, photos)
-                          ↓
-               Collection perimeter
-                          ↓
-                    Control plane
-                          ↓
-       Finance · Health · Travel · GTD · Media
-                          ↓
-              Heavy compute (on demand)
-              Data servers (always-on)
-```
+This is updated live in the Routines Dashboard — every task, every cadence, every automation status, with a Savings tab showing the full before/after breakdown. The numbers come from actual task data, not estimates. *Work in progress: this reflects approximately 80% of tracked routines. Household chores, outdoor and camping gear, rooftop tent equipment, and several other domains aren't mapped yet. The ~380 hrs/yr figure is a floor, not a ceiling.*
+
+The deeper insight is about cognitive overhead, not just calendar time. A time-based reminder fires at the right moment in the calendar. A contextual reminder fires when the conditions in your actual life — your upcoming schedule, your consumption patterns, your device usage, your behaviors — indicate something needs attention. The time-based reminder requires a human to set up every case. The contextual reminder learns from what's already happening and projects forward.
+
+The background hum of *what am I forgetting* — that quiets. That's the goal of the system, stated plainly.
 
 ---
 
 ## Core Use Cases
 
-The project started with a specific frustration: manually downloading bank and credit
-card statements every month, importing them into personal accounting software, and
-reconciling everything by hand. It was tedious, error-prone, and consumed time that
-could have been spent on literally anything else. The question was simple — can a
-local AI handle this? The answer turned out to be yes, and then much more than that.
+> Use case annotations: **🤖 AI** = requires model inference (classification, synthesis, reasoning) · **⚙️ Mech** = deterministic script, fixed rules, threshold alert — no model needed
 
-### Financial statement automation and reconciliation
+### Routine automation — the cognitive overhead reclaim ⚙️ 🤖
 
-The genesis use case. Every bank, credit card, and investment account generates
-statements. Downloading them, converting formats, importing, checking for anomalies,
-tracking category spend — all mechanical work that follows predictable rules. AiMe
-automates the pipeline end to end: detect when statements are ready, download, convert,
-import, flag anything unusual for human review. What used to take an afternoon becomes
-a confirmation tap.
+*(Full story in [Why It Works](#why-it-works--the-routines-dashboard) above.)*
 
-### Routine automation — the cognitive overhead reclaim
+Every recurring task mapped, quantified, and automated to the extent possible. Most of the work is mechanical — deterministic scripts executing on a schedule, firing alerts on thresholds. AI handles the edge cases: classification, prioritization, context-aware surfacing. The dashboard is the live proof — not a projection, but a running system measuring actual overhead.
 
-During a single planning session, every recurring routine was mapped out — daily,
-weekly, monthly, quarterly, annually. Then automation targets were layered on top.
-The result: a calendar year of tasks that felt overwhelming collapsed into a manageable
-structure where most of the work is either handled automatically or surfaced at exactly
-the right moment as a confirmation prompt. This is the use case that revealed the full
-power of the architecture — not any single automation, but the cumulative effect of
-removing friction everywhere simultaneously.
+### Financial statement automation and reconciliation ⚙️ 🤖
 
-### Sleep and recovery scoring
+The genesis use case. Every bank, credit card, and investment account generates statements. AiMe automates the pipeline end to end: detect when statements are ready, download via sanctioned OFX/QFX protocols, import to personal accounting software, flag anything unusual for human review. What used to take an afternoon becomes a confirmation tap.
 
-Three devices capture sleep data: a dedicated sleep ring as the primary source, a
-smartwatch as a gap-filler, and sleep earbuds as a secondary reference. No single
-device is perfect. AiMe reads all three, applies a consistent scoring model, and
-produces a unified daily recovery assessment. Context flags — travel, unusual activity,
-substances — are logged manually and factored in automatically. The system knows the
-difference between a low HRV reading on a normal night and the same reading after a
-red-eye flight. One score, grounded in all available data.
+### Rewards and credits tracking — stop leaving money on the table ⚙️
 
-### Rewards and credits tracking — stop leaving money on the table
+Hotel free night certificates that expire unused. Quarterly credits that roll over and disappear. Monthly perks that require manual activation. The average person with multiple travel cards leaves significant value unredeemed annually — not from carelessness, but from the cognitive overhead of tracking expiry dates across a dozen programs. AiMe monitors every balance, every expiry, every activation requirement, and surfaces reminders at the right time — 60 days out, 30 days, two weeks, the day before. **Running today.** Expiry alerts fire daily at 07:00 via a tiered alert system.
 
-Hotel free night certificates that expire unused. Quarterly credits that roll over
-and disappear. Monthly perks that require manual activation. The average person with
-multiple travel credit cards leaves hundreds of dollars per year unredeemed simply
-because tracking expiry dates across a dozen programs is cognitively exhausting.
-AiMe monitors every balance, every expiry, every activation requirement, and surfaces
-reminders at the right time — 60 days out, 30 days, two weeks, the day before.
+### Sleep and recovery scoring 🤖
 
-### Car maintenance intelligence
+Three devices capture sleep data: a dedicated ring as the primary source, a smartwatch as a gap-filler, sleep earbuds as secondary reference. No single device is perfect. AiMe reads all three, applies a consistent scoring model, produces a unified daily recovery assessment. Context flags — travel, unusual activity, substances — are factored in automatically. The system knows the difference between a low HRV reading on a normal night and the same reading after a red-eye flight.
 
-A 12-year maintenance log for a 2001 Audi and a 2003 Lexus. The dashboards model each
-vehicle's systems using a circuit breaker architecture — every component mapped to the
-bus it belongs to, status tracked, service queue prioritized by urgency. The question
-"when did I last change the timing belt?" stops being something you have to remember
-and becomes something you can ask. Eventually: cross-reference with financial records
-to calculate true cost of ownership and inform keep-versus-replace decisions with
-actual data.
+### Car maintenance intelligence ⚙️ 🤖
 
-### Trip reconstruction and narrative generation
+A 12-year maintenance log for two 20+ year old high mileage used vehicles converted to dashboards showing every critical part, status tracked, service queue prioritized by urgency. "When did I last change the timing belt?" stops being something you have to remember and becomes something you can ask. **Running today** for a 2001 Audi A4 (~300k miles) and a 2003 Lexus ES300 (~200k miles). Eventual goal: cross-reference with financial records to calculate true cost of ownership and inform keep-versus-replace decisions with actual data.
 
-You took a trip in late 2023. You remember a great meal but can't recall where — you
-paid by credit card but never kept the receipt. AiMe cross-references location history,
-credit card records, calendar entries, and geotagged photos to reconstruct the full
-itinerary. Then it goes further: draft a narrative summary of the trip, anchored by
-the photos and enriched by the financial and location data. Memory becomes queryable.
-Experiences become stories automatically.
+### iMessage AI Assistant 🤖
 
-### Decision archaeology — understanding how you got here
+Text a question to a designated number. The question is routed to an AI model (Mistral 7B) running locally. The reply arrives in iMessage. No external AI, no data leaving the network. **Running today** as a proof of concept — full triage layer and confirm→execute loop in progress.
 
-AiMe was built through hundreds of AI-assisted conversations — architecture decisions,
-tradeoffs, things tried and abandoned. That history exists as exportable conversation
-data. The `chatgpt-parser.html` tool built for this project parses and indexes those
-exports, tagging conversations by topic and making them searchable.
+### Decision archaeology — understanding how you got here 🤖
 
-The application: AiMe will eventually reconstruct its own origin story from that data.
-When did the Pi's role get demoted to edge-only? When was the CYME analogy first
-articulated? What drove the shift from polling-based to event-driven automation? The
-answers exist in the conversation history. A RAG pipeline (a technique where an AI
-searches your own documents before answering, rather than relying on generic training)
-over that corpus makes them queryable.
-
-The pattern generalizes to any domain where decisions accumulate: medical history,
-financial choices, professional pivots. Not just what happened — but why it was
-decided, what alternatives were considered, and what was known at the time.
-
-### Open loop surfacing — nothing gets permanently lost
-
-You connected with someone, had a genuinely promising exchange, and then life got busy.
-Weeks later you remember the conversation existed but have no idea where the thread
-went. AiMe treats these as GTD (Getting Things Done) open loops — unresolved items
-that deserve a periodic review. The system surfaces them: "you were in touch with
-this person in March, the conversation was warm, you never followed up — still want
-to?" Applied to any domain where threads go cold: professional contacts, unfinished
-projects, promised follow-ups, conversations that ended mid-thought. Nothing is
-deleted. Everything is reviewable.
+AiMe was built through hundreds of AI-assisted conversations — architecture decisions, tradeoffs, things tried and abandoned. That history is exportable and parseable. A tool was built specifically for this project which parses and indexes those exports, tagging conversations by topic and making them searchable. Eventually: AiMe reconstructs its own origin story from that data. The pattern generalizes to any domain where decisions accumulate — medical history, financial choices, professional pivots. Not just what happened, but why it was decided and what was known at the time.
 
 ---
 
 ## Why Build This
 
-Every time a use case came together, the same instinct fired: *I want the full power
-of AI working on this — but I am not comfortable feeding my personal data into a
-cloud service I do not control.* That tension is what AiMe resolves. Data sovereignty
-was the original driver. The rest of the benefits emerged from building toward it.
+### 1. Data sovereignty — your data doesn't leave without explicit approval
 
-### 1. Data sovereignty — your data does not leave without explicit approval
+Finance, health, location, and communication data run on local inference by default. Any external call requires explicitly declaring what data is being sent and why and explicit approval before anything leaves the network. Once data hits an external server, the expectation of removal is zero regardless of stated retention policy. Local by default prevents the problem entirely.
 
-Finance, health, location, and communication data run on local inference by default.
-Any external call requires explicitly declaring what data is being sent, what
-sanitization was applied, and why it is safe — before anything leaves the network.
+### 2. Questions that were previously unanswerable 🤖
 
-Once data hits an external server, the expectation of removal is zero regardless of
-stated retention policy. Local by default prevents the problem entirely.
+The clearest demonstration: cross-reference location history, credit card records, calendar entries, and geotagged photos to reconstruct a trip itinerary from years ago. No consumer AI product can do this — they don't have your data. Local inference using your personal data is the only architecture that answers these questions without sending your location and financial history to a third party.
 
-### 2. AI over your actual data — questions that were previously unanswerable
+### 3. Single pane of glass — everything in one place ⚙️
 
-The clearest demonstration: you took a trip in late 2023, you remember a great meal
-but cannot recall where — you paid by credit card but never kept the receipt.
-Cross-reference location history, credit card records, calendar entries, and photos
-with geolocation and timestamps. Reconstruct the itinerary. Draft the narrative.
+Most people's data is scattered across dozens of services that don't talk to each other. Sleep data in one app. Finances in a desktop program. Calendar in an email client. Photos in cloud storage. AiMe builds a unified analytical layer over all of it without requiring migration or consolidation. The raw data stays where it lives. The mess is fine — that's the whole point.
 
-No consumer AI product can do this. They do not have your data. Local inference plus
-a RAG pipeline over your personal data corpus is the only architecture that answers
-questions like this without sending your location and financial history to a third party.
+### 4. Watches for you. Only tells you what matters. ⚙️ 🤖
 
-### 3. Single pane of glass — everything in one place
+The most underappreciated benefit: AiMe eliminates the cognitive overhead of monitoring, not just the overhead of doing. Right now, staying on top of adult life requires constant low-grade vigilance — checking expiry dates, remembering service intervals, noticing when something is running low. AiMe watches everything and surfaces only what actually needs your attention, only when it matters. Not a better calendar. A behavioral layer using data that is already available.
 
-Most people's data is scattered across dozens of services that do not talk to each
-other. Sleep data in one app. Finances in a desktop program. Calendar in an email
-client. Photos in cloud storage. Location history in a mapping service.
+### 5. Resilience — not dead in the water when a cloud service changes ⚙️
 
-AiMe builds a unified analytical layer over all of it without requiring you to migrate
-or consolidate anything. The raw data stays where it lives. The mess is fine — that is
-the whole point. You do not need one perfect service. You need one good integration layer.
+When a cloud AI has an outage, changes pricing, deprecates a model, or shifts policy, AiMe keeps running. Local inference provides partial functionality even when the internet is unavailable. Not at full capacity, but not on the floor either.
 
-### 4. Environmental impact — efficiency as a design value
+### 6. No platform lock-in ⚙️
 
-Every node in this system was chosen or configured to minimize idle power draw — see
-the node table in How It Works for the full comparison. The always-on nodes draw
-between 3W and 8W each. The high-performance laptop that handles heavy workloads
-sleeps at 1-3W and wakes only when needed. Smart plug monitoring captures energy
-consumption data that feeds a planned efficiency dashboard. The hypothesis: local
-Apple Silicon inference is meaningfully more efficient per query than cloud
-alternatives, especially for structured, repetitive tasks.
+Built on open components: Ollama (local AI inference), LlamaIndex (RAG pipeline), Tailscale (encrypted mesh networking), Kasa smart plugs (power orchestration), plain markdown files for memory and context. No single point of failure that could break the whole system.
 
-### 5. Resilience — you are not dead in the water when a cloud service goes down
+---
 
-When a cloud AI has an outage, changes pricing, or deprecates a model, the system
-keeps running. Local inference provides partial functionality even when the internet
-is unavailable — like an N-1 contingency in a distribution system. Not at full
-capacity, but not on the floor either.
+## What We've Built
 
-### 6. No platform lock-in
+A few things built in the course of this project are interesting as tools and patterns in their own right.
 
-Built on open components: Ollama (local AI inference), LlamaIndex (RAG pipeline),
-Tailscale (encrypted mesh networking), Kasa smart plugs (power orchestration), and
-plain markdown files for memory and context. No single point of failure that could
-break the whole system.
+### Edit on any device, version on your own hardware ⚙️
+
+The editing layer is iCloud — accessible from any device, no VPN needed. The versioning layer is a local git repository on the gateway. A single shell script bridges them: rsync iCloud → gateway, preview the diff, commit. Master files edited on an iPhone at a coffee shop are versioned on the home server by evening. No cloud git service involved.
+
+### See exactly what changed before saving to version history ⚙️
+
+A Flask-based web interface running on the gateway — accessible over Tailscale from anywhere — that shows which files changed between iCloud and git HEAD, full colorized inline diffs, a commit message input, and a one-click Sync+Commit button. No terminal required for routine session close-outs. The unstaged diff view catches errors that would otherwise survive to production. Built because the workflow needed a way to verify what actually changed before committing, not just a list of filenames.
+
+### "Doorbell-only" notification architecture ⚙️
+
+A privacy-preserving approach to push notifications: Pushover and iMessage carry only a signal and a Tailscale URL — never the personal content. The content lives on the mesh, served from the gateway. Personal data never passes through external notification servers regardless of what the notification is about. The device just rings; it doesn't know why.
+
+### Data classification as a decision system 🤖
+
+Rather than a lookup table of "what data can go where," the system uses four internalized rules that cover every case. The key insight is the aggregation principle: any derived or indexed data inherits the maximum sensitivity tier of any contributing input — not the average. One sensitive source makes the whole pipeline sensitive. This principle shapes the design of every planned pipeline before a line of code is written.
+
+### Consistent Claude session instructions as a workflow layer 🤖
+
+A working session ritual — grounding checklist, command discipline, Find/Replace format for document edits, close-out steps — is embedded in the master files and loaded at the start of every Claude session. This turns a capable AI into a consistent engineering partner with known behaviors across sessions with "memory" that carries over from session to session. The instructions are themselves a form of infrastructure: they reduce per-session friction and prevent an entire class of errors (wrong node, wrong file, unverified state). Other builders can adopt this pattern directly.
+
+### Command confirmation with a logged audit trail ⚙️
+
+Every state-changing command is flagged explicitly, confirmed before execution, and logged with a timestamp. The discipline is the logging as much as the confirmation. When something breaks three days later, the log shows exactly what changed. A read-only verification step precedes every state-changing command — not because the AI might be wrong, but because docs and runtime diverge, and the runtime is always ground truth.
 
 ---
 
@@ -248,35 +175,25 @@ break the whole system.
 
 ### The Node Mesh
 
-Tailscale (a WireGuard-based encrypted mesh VPN) connects all devices under a single
-private network accessible from anywhere. Every node is reachable by hostname from
-every other node regardless of physical location or ISP.
+Tailscale (a WireGuard-based encrypted mesh VPN) connects all devices under a single private network accessible from anywhere. Every node is reachable by hostname from every other node regardless of physical location or ISP.
 
 | Node | Device | Always-on | Idle draw † | Purpose |
 |---|---|---|---|---|
 | `relay` | Raspberry Pi 3B | ✅ | ~3–4W | Collection perimeter, Kasa control, mesh exit node — the only node hard-rebootable via smart plug |
-| `gateway` | MacBook Air M1 | ✅ | ~3–8W | Control plane — Caddy reverse proxy, GTD dashboard, shared scripts, log aggregation |
-| `compute` | MacBook Pro 16" | ❌ On-demand | ~1–3W sleeping / ~20W+ active | Heavy AI workloads — woken via Kasa power cycle, sleeps otherwise |
+| `gateway` | MacBook Air M1 | ✅ | ~3–8W | Control plane — Caddy reverse proxy, dashboards, iMessage AI, shared scripts, log aggregation |
+| `compute` | MacBook Pro 16" | ❌ On-demand | ~1–3W sleeping / ~20W+ active | Primary inference node — DeepSeek R1 32B, woken via Kasa power cycle |
 | `vault` | Galaxy Book (Windows) | ✅ | ~5W | MS Money, LlamaIndex RAG pipeline, Windows-native runtime |
 | `viewer` | MacBook Air M3 | ❌ Travel | ~3–8W | Travel thin client — DeepSeek R1 14B via Ollama, fully offline AI fallback |
 
-*† Idle draw figures are estimates based on published hardware specs. Measured values from Kasa smart plug telemetry will replace these once the energy monitoring pipeline is restored — see Current State.*
+*† Idle draw figures are estimates based on published hardware specs. Measured values from Kasa smart plug telemetry will replace these once the energy monitoring dashboard is complete.*
 
-**relay** deserves its name twice over: it is a protective relay in the power systems
-sense (operates independently of the system it protects) and a traffic relay (exit
-node, subnet router, Kasa bridge). If the gateway hangs, relay cycles its power
-outlet. If relay itself hangs, its own hardware watchdog reboots it autonomously.
-The rest of the system can fail completely; relay brings it back.
+**relay** deserves its name twice over: it is a protective relay in the power systems sense (operates independently of the system it protects) and a traffic relay (exit node, subnet router, Kasa bridge). If the gateway hangs, relay cycles its power outlet. If relay itself hangs, its own hardware watchdog reboots it autonomously. The rest of the system can fail completely; relay brings it back.
 
-### Power Orchestration
+### Power Orchestration ⚙️
 
-Kasa smart plugs give the system physical control over hardware — the Pi can wake the
-compute laptop by cycling its dock power outlet. An external archive drive is powered
-off by default, invisible and inaccessible until explicitly activated. Energy
-monitoring captures power consumption data for the efficiency dashboard.
+Kasa smart plugs give the system physical control over hardware — the Pi can wake the compute laptop by cycling its dock power outlet. An external archive drive is powered off by default, invisible and inaccessible until explicitly activated. Energy monitoring captures power consumption data for the planned efficiency dashboard.
 
-Watchdog architecture runs two layers, because single-point watchdogs have their own
-failure modes:
+Watchdog architecture runs two layers, because single-point watchdogs have their own failure modes:
 
 | Layer | Mechanism | Status |
 |---|---|---|
@@ -287,9 +204,9 @@ failure modes:
 
 | Complexity | Example tasks | Model | Node |
 |---|---|---|---|
-| Low | GTD triage, tracker queries | Mistral 7B | gateway (always-on) |
-| Medium | Financial queries, cross-reference | DeepSeek R1 14B | compute |
-| High | Code, deep reasoning | Larger models | compute |
+| Low | GTD triage, iMessage routing, tracker queries | Mistral 7B | gateway (always-on) |
+| Medium | Financial queries, cross-reference, reasoning | DeepSeek R1 14B | compute / viewer (travel) |
+| High | Code, deep synthesis, complex analysis | DeepSeek R1 32B | compute (on-demand) |
 | External | Open-ended reasoning, sanitized data only | Claude API | Last resort |
 
 The governing model — drawn directly from power systems:
@@ -300,8 +217,7 @@ Scripts  =  circuit breakers   (execute defined actions reliably)
 Human    =  operator           (decides when to close the breaker)
 ```
 
-Every consequential action requires explicit human confirmation. The AI recommends.
-The human gates. The script executes.
+Every consequential action requires explicit human confirmation. The AI recommends. The human gates. The script executes.
 
 ---
 
@@ -309,47 +225,17 @@ The human gates. The script executes.
 
 ### ADHD-friendly by design — remove friction, build momentum
 
-Friction removal is the primary goal. Every manual routine in this system is a
-candidate for automation. The endgame is not a more organized to-do list — it is
-eliminating the cognitive overhead of remembering to do things at all. When all
-recurring routines were mapped out and then layered with automation targets, a load
-that felt overwhelming became genuinely manageable. That is the signal the
-architecture is working.
-
-The priority system evolved to reflect how a multi-year build actually gets finished.
-Urgent items first. Important items next. Then quick wins that build momentum — fun
-sessions that ship something beat grinding sessions that stall. A third axis emerged
-over time: proof-of-concept work. Before committing something to the architecture,
-build a small version first and prove it works. The iMessage gateway is being tested
-empirically before becoming a dependency. The Pushover loop was built as a standalone
-circuit before being wired into the broader automation. Confidence before scale.
-All three matter as much as urgency.
+Friction removal is the primary goal. The endgame is not a more organized to-do list — it is eliminating the cognitive overhead of remembering to do things at all. When all recurring routines were mapped and automation targets assigned, a load that felt overwhelming became genuinely manageable. That is the signal the architecture is working.
 
 ### OCD-friendly — trust but verify
 
-The system is designed for effortless verification, not elimination of oversight.
-The autopay example: payments were being scheduled manually due to a reasonable
-concern about silent failures. The solution is not to stop checking — it is to have
-the system confirm that payments processed and flag the ones that did not, before the
-recovery window closes. You still verify. You just do not do it yourself every time.
+The system is designed for effortless verification, not elimination of oversight. The autopay example: rather than stop checking, have the system confirm that payments processed and flag the ones that didn't — before the recovery window closes. You still verify. You just don't do it yourself every time. The same instinct applies to the build itself: prove something works at small scale before wiring it into the architecture.
 
-The same pattern runs throughout: credit expiry alerts, system health checks,
-connectivity monitoring. The system watches so you do not have to watch constantly —
-but it always tells you what it saw. The same instinct eventually extended to the
-build itself — prove something works at small scale before wiring it into the
-architecture.
+### Human always in the loop
 
-### Human always in the loop — agents as last resort
+Every automation has a manual fallback. Every consequential action goes through an explicit confirmation gate. AI agents are used here only when a script genuinely cannot do the job — the blast radius of a bug is far larger with an agent than a script. Bounded blast radius is a first-class design requirement, not an afterthought.
 
-A power system operator does not send an autonomous robot to close a breaker. They
-assess the situation, make a decision, and execute. AI agents are only used here when
-a simple script genuinely cannot do the job. The reason: the blast radius of an agent
-bug is far larger than a script bug. Scripts are auditable, debuggable, and bounded.
-Agents can chain unexpected actions before anyone notices something went wrong.
-
-### Redundancy at every tier — N-1 everywhere, N-2 where it counts
-
-Every critical path has at least one fallback. Several have two:
+### Redundancy at every tier
 
 | Concern | Primary | Backup | Last resort |
 |---|---|---|---|
@@ -358,98 +244,73 @@ Every critical path has at least one fallback. Several have two:
 | File storage | iCloud | gateway sync copy | — |
 | Local inference | Always-on small model | On-demand large model | Claude API |
 
-No single failure takes the system down. Most double failures do not either.
+No single failure takes the system down. Most double failures don't either.
 
 ### Deterministic execution, probabilistic reasoning — kept deliberately separate
 
-**Deterministic:** scripts, file operations, power cycles, system commands. Same input
-always produces the same output. Auditable, debuggable, bounded blast radius.
+**Deterministic:** scripts, file operations, power cycles, system commands. Same input always produces the same output. Auditable, debuggable, bounded blast radius.
 
-**Probabilistic:** local models, RAG retrieval, recovery scoring, consumption
-predictions. Reasoning over uncertain inputs, producing best-estimate outputs that
-improve over time.
+**Probabilistic:** local models, RAG retrieval, recovery scoring, consumption predictions. Reasoning over uncertain inputs, producing best-estimate outputs that improve over time.
 
-The architectural rule: probabilistic reasoning tells you *what* to do. Deterministic
-execution decides *how* it gets done. The human confirmation gate sits between them —
-the circuit breaker between the reasoning layer and the execution layer. A
-probabilistic output never directly triggers a consequential action without a
-deterministic confirmation step in between.
+The architectural rule: probabilistic reasoning tells you *what* to do. Deterministic execution decides *how* it gets done. The human confirmation gate sits between them — the circuit breaker between the reasoning layer and the execution layer.
 
 ### Self-regulating — like 5/3/1, not a fixed plan
 
-5/3/1 is a strength training methodology built on a specific insight: you do not go
-all-out every session. You work at a percentage of your tested maximum, then
-recalculate that maximum from real performance data — not what you planned. Stronger
-than expected? The program adjusts up. Running a deficit? It accounts for that rather
-than grinding you through a weight you cannot handle. The program improves by
-measuring what actually happened.
+5/3/1 is a strength training methodology built on one insight: you don't go all-out every session. You work at a percentage of your tested maximum, then recalculate from real performance data — not what you planned. AiMe applies the same principle throughout. The consumables tracker adjusts reorder timing based on actual usage and upcoming trips, not fixed calendar intervals. The system observes actual outputs, compares to targets, and adjusts.
 
-AiMe applies the same principle throughout. The sleep tracker maintains a rolling
-sleep debt and ratchets sleep need upward when persistent deficit is detected — rather
-than letting the system normalize chronic under-sleep as a new baseline. The
-consumables tracker adjusts reorder timing based on actual usage patterns and upcoming
-trips, not fixed calendar intervals. The system observes actual outputs, compares them
-to targets, and adjusts parameters accordingly.
+### Clean layer over raw data
 
-### Simple by design — graceful manual fallback
-
-Every automation has a manual path that requires nothing new to learn. If the
-Pushover loop breaks, the monthly maintenance still gets done manually. If the iMessage
-gateway goes down, questions still get answered via a terminal session. The system
-saves your bandwidth for what matters; it does not create new fragile dependencies
-that collapse everything when they break.
-
-### Use what you have — optimize, then upgrade
-
-This project runs on hardware that already existed. Nothing was purchased specifically
-for it until the foundation was stable enough to benefit from better hardware. The
-Raspberry Pi sitting in a drawer turned out to be the most important node in the
-system. Use what you have, make it work well within those constraints, and upgrade
-when stability justifies it.
-
-### Clean layer over raw data — no cleanup required
-
-You do not need to organize your existing data to use it. AiMe builds an analytical
-layer on top of data where it lives — emails stay in the email client, financial
-records stay in the accounting software, photos stay in cloud storage. Old emails,
-duplicate photos, years of unorganized files — all become searchable and queryable
-without touching a single one of them. The mess is fine. Cleanup becomes optional,
-not prerequisite.
+You don't need to organize your existing data to use it. AiMe builds an analytical layer on top of data where it lives. Old emails, duplicate photos, years of unorganized files — all become searchable and queryable without touching a single one. The mess is fine. Cleanup becomes optional, not prerequisite.
 
 ---
 
 ## Current State
 
-The infrastructure is built and running. The RAG pipeline and AI triage layer are
-designed but not yet implemented. An external AI (Claude, policy-gated) currently
-serves as the reasoning layer for planning and non-sensitive tasks.
+The infrastructure is built and running. The RAG pipeline and full AI triage layer are in progress. Several automation services are live.
 
 | Layer | What it is | Status |
 |---|---|---|
 | Data sources | Banks, health devices, email, calendar, photos | 🔧 Partial — manual ingestion today |
 | Collection perimeter | relay (Pi), Kasa polling, Tailscale mesh | ✅ Running |
-| Control plane | gateway (M1), Caddy, dashboard, shared scripts | ✅ Running |
-| Analytical layers | Finance, GTD, Health, Travel, Media | 🔧 In progress — trackers built, pipelines not yet wired |
-| Heavy compute | compute (MBP), on-demand inference | ✅ Infrastructure ready |
-| Data servers | vault (Windows), MS Money, LlamaIndex, RAG | ❌ Offline — restore pending |
+| Control plane | gateway (M1), Caddy, dashboards, shared scripts | ✅ Running |
+| Analytical layers | Finance, GTD, Health, Travel, Media | 🔧 In progress — services live, RAG pipeline pending |
+| Heavy compute | compute (MBP), DeepSeek R1 32B, on-demand inference | ✅ Infrastructure and models ready |
+| Data servers | vault (Windows), MS Money, LlamaIndex | ✅ Online — RAG pipeline pending |
+
+**Current phase: Phase 1 — Partial Automation (PoC).** Infrastructure built and stable (Phase 0 ✅). Individual pipelines proven at small scale; first AI model set up and operational. Phase 2 target: pipelines wired end-to-end, behavioral notifications replace time-based alerts.
 
 **What is running now:**
-- Encrypted mesh network across all nodes with key expiry policy configured
-- Raspberry Pi with hardware watchdog, thermal management, persistent journal logging
-- Always-on gateway with reverse proxy, GTD dashboard, automated daily build pipeline
-- Fully offline local AI fallback on travel node (DeepSeek R1 14B via Ollama)
-- Rewards and credits tracker — persistent artifact, conversationally updatable
-- Car maintenance dashboards — circuit breaker model for vehicle systems
-- Strength training tracker — cycle logs, PR tracking, training max progression
-- Historical chat export parser — bulk import of past conversations for RAG ingestion
-- Manual routine system with automation targets mapped across every cadence
-- Routine overhead dashboard — monthly cognitive load before and after automation
+
+**Infrastructure & Mesh**
+- Encrypted Tailscale mesh across all nodes, key expiry policy configured
+- Raspberry Pi — hardware watchdog, thermal management, persistent journal logging
+- Always-on gateway — reverse proxy, automated daily build pipeline
+
+**Automation Services**
+- **iMessage AI Assistant** — text a question, Mistral 7B answers locally, reply via iMessage; no external AI, no data off-mesh
+- **Diagnostics agent** — daily SSH health reports, doorbell alert on degraded state
+- **Rewards expiry alerts** — daily tiered notifications (60d/30d/7d) for credits, points, certificates
+- **Monthly maintenance** — Pushover + iMessage confirm→execute loop; updates all nodes on approval
+
+**Trackers & Dashboards**
+- **Routine overhead dashboard** — 56 tasks mapped, Savings tab with full before/after breakdown
+- **Rewards and credits tracker** — live, updated daily
+- **Car maintenance dashboards** — Audi A4 and Lexus ES300
+- **5/3/1 training dashboard** — 25+ cycles (2019–2026), AMRAP tracking, TM progression
+
+**AI & Inference**
+- Fully offline AI fallback on travel node (DeepSeek R1 14B, M3 Metal-accelerated)
+- vault online — MS Money running, LlamaIndex foundation ready (RAG pipeline pending)
+
+**Developer Tools**
+- **Git commit UI** — iCloud↔gateway sync with diff preview and one-click commit
 
 **What is being built next:**
-- Pushover confirmation loop — proving the confirm → execute architecture end to end
-- iMessage gateway — route questions to local AI models via text message
-- RAG pipeline — LlamaIndex over email, financial records, health data, calendar
-- Automated sleep and recovery scoring from device APIs
+- **RAG pipeline** — LlamaIndex over email, financial records, health data, calendar (Session D)
+- **iMessage triage layer** — full routing to scripts, tracker queries, confirm→execute loop (Session C)
+- **Automated statement import** — OFX/QFX download → MS Money pipeline
+- **Recovery scoring dashboard** — Oura API auto-pull, unified daily score from multiple devices
+- **Mac Mini M5 Pro** — primary always-on inference node, August 2026
 
 ---
 
@@ -471,39 +332,25 @@ serves as the reasoning layer for planning and non-sensitive tasks.
 | `BENEFITS.md` | Evaluating new use cases or explaining the system to someone new |
 | `OUTLOOK_WORKFLOW.md` | Working on email or calendar workflows |
 | `ROUTINES.md` | Reviewing routines, running maintenance sessions, pre-travel checks |
+| `PROCEDURES.md` | Step-by-step protocols for specific triggered events (iOS updates, backups) |
+| `LESSONS_LEARNED.md` | What went wrong, what worked, what changed — the build's institutional memory |
 
 ---
 
 ## For Builders
 
-I started thinking about this project about a year ago. I didn't actually begin
-building anything until around Q4 2025 and since then, I've been working on it on
-and off as I've been able to find time and energy to continue. The project started in
-ChatGPT, where several hundred conversations worth of architecture decisions and
-design tradeoffs accumulated. It moved to Claude as the work became more structured.
-The `chatgpt-parser.html` tool was built specifically to preserve that history and
-prepare it for eventual RAG ingestion — so no conversation is lost regardless of
-which platform it happened on. Ironically, a system designed to reclaim time takes
-time to build. AiMe will eventually help reconstruct exactly when and how it came
-together — which is one of the use cases you read about above.
+Here's the honest version of why I built this.
 
-This project is meant to be a blueprint, not a product. There is no hosted version,
-no subscription, no vendor. Everything here runs on hardware I own, under my control.
-My goal is to show that this kind of system is buildable — and to document it well
-enough that others can build their own without starting from scratch. Fork it, adapt
-it, make it yours. It is free, and intended to stay that way. For anyone who finds
-value in it and wants to contribute back, a donation option will be available.
+I've spent a lot of time on this project. Not because I had spare time to fill, but because the alternative is continuing to hand personal financial history, medical data, and behavioral patterns to cloud services whose business model isn't aligned with mine. That tradeoff never sat right. Every time a useful use case came together, the same instinct fired: *I want the full power of AI working on this, but I'm not comfortable feeding my personal data into a system I don't control.* This is the solution I built because nothing existing solved it the way I needed.
 
-One honest caveat: this is not plug-and-play. It took real time, real decisions, and
-a willingness to break things and figure out why. AI-assisted tools like Claude make
-it dramatically more accessible than it would have been a few years ago — that is how
-much of this got built. But accessible is not the same as risk-free. AI can produce
-code that runs, looks right, and contains problems you will not catch unless you know
-what questions to ask. If you are building something that touches your personal data
-or runs on your home network, understand what you are deploying. Ask questions.
-Verify. The architecture in these docs is built with that habit in mind. Bring the
-same habit to your own build.
+Think of it as **an adulting assistant**: everyone has bills to pay, appointments to schedule, credits to use before they expire, and a stack of recurring tasks that are cognitively exhausting to track manually. You don't need to know what SCADA is to benefit from a system that watches your rewards so you don't leave money on the table, reminds you about the battery cycling you've been meaning to do for three months, and tells you when your car is due for service based on actual mileage — not a generic calendar interval. That's what this is, minus the data sovereignty trade-off that every commercial alternative forces on you.
+
+I'm sharing this because AI capability and data sovereignty shouldn't require a trade-off. The tools to build this exist, they're open source, and the architecture is documentable. If this blueprint saves someone months of working through the same patterns, it was worth publishing. It's free, and it's going to stay free. The value of more people owning their data isn't something I'd want to put a price on.
+
+One honest caveat: this isn't plug-and-play. It took real time, real decisions, and a willingness to break things and figure out why. AI-assisted tools like Claude make it dramatically more accessible than it would have been a few years ago — that's how much of this got built. But accessible isn't the same as risk-free. If you're building something that touches your personal data or runs on your home network, understand what you're deploying. Ask questions. Verify. The architecture in these docs is built with that discipline in mind. Bring the same discipline to your own build.
+
+**Fork, adapt, contribute:** [github.com/tandrew101/a-i-me](https://github.com/tandrew101/a-i-me)
 
 ---
 
-*Last updated: 2026-05-03 15:37 ET*
+*Last updated: 2026-05-17 1545 ET*

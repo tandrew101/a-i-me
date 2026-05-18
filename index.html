@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AiMe — Build Status</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <style>*{box-sizing:border-box;margin:0;padding:0}body{background:#0d1117}</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState} = React;
+
+const sessions = [
+  {date:"2026-04-08",type:"OPS",title:"Pi Stabilization & Network Cleanup",milestone:false,summary:"P252 aluminum case, hardware watchdog, hostname persistence fix. relay + Kasa onto shared LAN subnet. relay renamed from orchestrator-prod-home."},
+  {date:"2026-04-25",type:"ARCH",title:"Architecture Foundations",milestone:true,summary:"CYME Gateway analogy codified. Four master files established. Node roster finalized. Mac Mini M5 Pro (Aug 2026) locked as future primary compute node."},
+  {date:"2026-04-27",type:"OPS",title:"Mesh Recovery + Maintenance Planning",milestone:false,summary:"Tailscale mesh fully recovered. Key expiry disabled on all infra nodes. Monthly maintenance procedure documented."},
+  {date:"2026-04-30",type:"PLAN",title:"Workflow/Plan Overhaul + Publishing Package",milestone:true,summary:"WORKFLOW.md major overhaul: ADHD-friendly session ritual, manual routines, milestone publishing, runcmd discipline. PLAN.md restructured into four Completed Tools categories."},
+  {date:"2026-05-03",type:"PLAN",title:"README Overhaul",milestone:true,summary:"Full README rewrite. AiMe name committed. CYME parallel table for technical audience. Decision Archaeology use case. For Builders section."},
+  {date:"2026-05-03",type:"PLAN",title:"Workflow File Structure Refinement",milestone:false,summary:"3-column TOC. Supplemental/ folder created. Three-pattern tracker workflow table."},
+  {date:"2026-05-08",type:"PLAN",title:"Supply Chain Incident Response",milestone:false,summary:"Bitwarden CLI incident (no exposure). AI hot-swap principle added. Isolate-before-executing principle documented."},
+  {date:"2026-05-08",type:"PLAN",title:"Security, Identity & Domain Setup",milestone:true,summary:"Ente Auth replaced Authy. a-i-me.com registered. GitHub repo created. Verizon Number Lock verified."},
+  {date:"2026-05-08",type:"PLAN",title:"Git Infrastructure Setup",milestone:true,summary:"Gateway git repo initialized. sync-to-git.sh built — replaces .bak dance entirely. iCloud → gateway rsync + commit in one command."},
+  {date:"2026-05-09",type:"PLAN",title:"Routines, Procedures & System Design",milestone:true,summary:"ROUTINES.md finalized (56 tasks). PROCEDURES.md created. LESSONS_LEARNED.md born. 66-day habit checkpoint. Gamification as first-class ADHD design tool."},
+  {date:"2026-05-09",type:"OPS",title:"Routines Dashboard Deploy + Tracker Workflow",milestone:true,summary:"routine-dashboard.html live on gateway. Portal back-link standard. Tracker workflows standardized."},
+  {date:"2026-05-10",type:"OPS",title:"Tracker Symlinks + Dashboard v2",milestone:false,summary:"All 7 tracker files symlinked to docs git repo. Daily tab + Installation Status chart mode. tasks.json with status field on all tasks."},
+  {date:"2026-05-11",type:"PLAN",title:"Review, Cleanup & Planning",milestone:false,summary:"Session file audit confirmed. WIP limits established. BENEFITS.md updated. 8 new LESSONS_LEARNED entries."},
+  {date:"2026-05-11",type:"OPS",title:"iMessage AI PoC — End-to-End Working",milestone:true,summary:"imessage_ai.py: SQLite poll of Messages.db → attributedBody plist extraction → Mistral 7B via Ollama → AppleScript reply. Echo guard, parse-failure retry. Zero external APIs."},
+  {date:"2026-05-12",type:"ARCH",title:"Data Classification System + Git Commit UI",milestone:true,summary:"T1–T3 sensitivity policy formalized. Aggregation rule codified (bus fault analogy). Git commit UI with diff preview built and deployed on gateway."},
+  {date:"2026-05-12",type:"OPS",title:"Supply Chain Assessment + Commit UI Bug Fix",milestone:false,summary:"Critical --delete bug wiping docs git history on every Sync+Commit. Fixed. Docs repo re-initialized with 61 files."},
+  {date:"2026-05-14",type:"OPS",title:"Kasa Telemetry Restored + Dashboard Feeds",milestone:true,summary:"telemetry.yaml fixed (stale Cox IP → correct LAN IP). Kasa dashboard feed live. Root cause of 6-month outage found and resolved."},
+  {date:"2026-05-14",type:"TRACKER",title:"Routines Schema Expansion + Use Cases",milestone:false,summary:"6 new fields added to tasks.json. iMessage tracker integration designed: hybrid command grammar, confirm-execute state machine, sensitivity routing."},
+  {date:"2026-05-15",type:"OPS",title:"Vault Stability + MS Money Pipeline",milestone:true,summary:"vault back online after 108 days. Citrix bloat removed. MS Money QIF import verified. SSH mesh extended to vault."},
+  {date:"2026-05-15",type:"OPS",title:"Git Commit UI v3.1 + Dashboard Fixes",milestone:false,summary:"Timestamps, per-file collapsible diffs, single Sync+Commit button. Tailscale peer pill regex fixed. Inventory catalog pipeline fixed."},
+  {date:"2026-05-16",type:"OPS",title:"Docs Viewer + Status Dashboard v2 + Sessions Index",milestone:true,summary:"AiMe Docs Viewer (13 docs, 4 groups, session start cheat sheet). Build Status Dashboard v2 with phase trajectory and AI vs Mechanical breakdown. sessions/INDEX.md with 42 entries."},
+  {date:"2026-05-16",type:"OPS",title:"Workflow Cleanup + Session File Sweep",milestone:false,summary:"Terminology block for master/project/gateway files. Complete session audit: 42 files confirmed, 5 filename typos fixed."},
+  {date:"2026-05-17",type:"OPS",title:"Hostname Renames + Inference Stack",milestone:false,summary:"All Mac nodes renamed (gateway, compute, viewer). DeepSeek R1 14B Modelfile (65K context) on viewer. Compute R1 32B (19GB) confirmed — primary on-demand inference node."},
+  {date:"2026-05-17",type:"TRACKER",title:"Routine Dashboard Savings Tab",milestone:true,summary:"Savings tab live: ~380→~195→~185 hrs/yr, ≈5 work weeks callout, 3-bucket drilldown (🚫⚡🧠). Chart detail Heavy/Light time bars by mode. Rewards data: 28 programs, 18 credits, 5 gift cards loaded. Publishing gate cleared."},
+  {date:"2026-05-17",type:"PLAN",title:"README Overhaul + GitHub Pages Launch",milestone:false,summary:"GTD-first framing. Routines dashboard as centerpiece. Notable Innovations section. Personal statement. a-i-me.com live on GitHub Pages."},
+];
+
+const layers = [
+  {name:"Collection Perimeter",analogy:"Metering / RTU Layer",icon:"📡",color:"#3b82f6",items:[
+    {name:"relay (Pi 3B)",status:"ok",note:"Kasa polling, subnet router, exit node. P252 case 40–47°C, hardware watchdog ✅, hostname persistence ✅"},
+    {name:"Kasa HS300 + HS103",status:"ok",note:"All outlets online. telemetry.yaml fixed. CSVs every 60s. Dashboard feed live."},
+    {name:"Kasa ghost rows",status:"warn",note:"Stale Local-AI.csv + MBP-Fan.csv still showing in dashboard. 2-min cleanup queued."},
+    {name:"MS Money (vault)",status:"ok",note:"Vault back online 2026-05-15. QIF import path verified. Transaction catch-up queued."},
+    {name:"Oura Ring API",status:"todo",note:"Integration designed. Not yet built. Gate: Session D (RAG pipeline)."},
+  ]},
+  {name:"Control Plane",analogy:"EMS / SCADA Layer",icon:"🖥",color:"#8b5cf6",items:[
+    {name:"gateway (M1 MacBook Air)",status:"ok",note:"Always-on. Caddy :8080. Sleep disabled. Dashboard live. SSD audit complete 2026-05-16 — 82GB free."},
+    {name:"Tailscale mesh",status:"ok",note:"All 5 nodes online. Key expiry disabled on infra nodes. P2P to all nodes confirmed."},
+    {name:"Gateway Dashboard",status:"warn",note:"Kasa ✅, peer pills ✅. Dock hold ❌ (no hold.json). MBP ping ❌ (no ping.csv)."},
+    {name:"Git Commit UI",status:"ok",note:"Flask UI on gateway. Timestamps, collapsible diffs, single Sync+Commit. --delete bug fixed."},
+    {name:"sync-to-git.sh",status:"ok",note:"iCloud → gateway rsync + git commit. Both repos in one call."},
+    {name:"Inventory catalog",status:"warn",note:"Pipeline fixed 2026-05-15. 462 scripts × 4 hosts — Nov 2025 data. Rescans queued."},
+    {name:"expiry_alerts.py",status:"ok",note:"Daily 07:00. Threshold-once gating 30/60d. Pushover + iMessage doorbell."},
+    {name:"iMessage listener",status:"ok",note:"KeepAlive LaunchAgent. FDA granted. Messages.app Login Item. Always-on."},
+    {name:"diagnostics.py",status:"ok",note:"Daily 06:00. SSH health checks on all nodes. HTML report. Doorbell on DEGRADED/CRITICAL."},
+  ]},
+  {name:"Analytical Layer",analogy:"State Estimator / Load Flow",icon:"🧠",color:"#10b981",items:[
+    {name:"iMessage AI PoC",status:"ok",note:"End-to-end live: SQLite poll → Mistral 7B → AppleScript reply. Echo guard active. Zero external APIs."},
+    {name:"iMessage Gateway (Session C)",status:"todo",note:"Design complete. Confirm-execute state machine, sensitivity routing. Build unblocked and ready."},
+    {name:"Ollama — Mistral 7B (gateway)",status:"ok",note:"Always-on. iMessage PoC wired. 8GB RAM — light/conversational inference."},
+    {name:"DeepSeek R1 32B (compute)",status:"ok",note:"19GB pulled 2026-05-17. AMD Radeon 5500M 8GB + 32GB RAM. Primary on-demand inference node."},
+    {name:"DeepSeek R1 14B (viewer)",status:"ok",note:"MLX/Metal on M3. Modelfile: 65K context. Travel offline AI. Open WebUI live."},
+    {name:"LlamaIndex + FastAPI (vault)",status:"warn",note:"Installed. Not yet wired to MS Money pipeline. Gate: Session D."},
+    {name:"Data Classification Policy",status:"ok",note:"T1–T3 tiers. Aggregation rule (bus fault model). Model routing rules defined."},
+  ]},
+  {name:"On-Demand Compute",analogy:"Peaking Unit / Spinning Reserve",icon:"⚡",color:"#f59e0b",items:[
+    {name:"compute (Intel MBP 16\", 32GB)",status:"warn",note:"R1 32B ✅ 19GB. Sleep/wake partially built — outlet order wrong, hibernation wait needed before cut."},
+    {name:"vault (Galaxy Book Go)",status:"ok",note:"Back online 2026-05-15. Citrix removed. MS Money ✅. SSH ✅. Windows-native task runner."},
+    {name:"viewer (M3 MacBook Air)",status:"ok",note:"Travel thin client. R1 14B + custom Modelfile (65K ctx). Open WebUI. Offline AI fallback tested."},
+    {name:"Mac Mini M5 Pro",status:"todo",note:"Planned Aug 2026. 48GB RAM → unlocks 70B models. Always-on inference server. Absorbs vault Windows role."},
+  ]},
+];
+
+const trackers = [
+  {name:"Routine Dashboard",status:"live",url:"/gateway/routines/",note:"Savings tab: ~380→~195→~185 hrs/yr, ≈5 work weeks. 56 tasks, 3-bucket drilldown, mode-aware time bars."},
+  {name:"5/3/1 Training",status:"live",url:"/gateway/531/",note:"25 cycles (Mar 2019–Apr 2026). TM history, AMRAP scatter, session log. Gaps: cycle planning, RPE."},
+  {name:"Audi Maintenance",status:"live",url:"/gateway/audi/",note:"12-year log, ~$27k documented. Circuit breaker model for vehicle systems."},
+  {name:"Lexus Maintenance",status:"partial",url:"/gateway/lexus/",note:"Initialized. First repair event seeded. Building out the log."},
+  {name:"Rewards & Cards",status:"partial",url:"/gateway/rewards/",note:"expiry_alerts.py daily. 28 programs, 18 credits, 5 gift cards loaded. Card Perks tab incomplete."},
+  {name:"Trackers Portal",status:"live",url:"/gateway/trackers/",note:"Hub for all 6 dashboards. Live expiry count from data.json on load."},
+];
+
+const roadmap = [
+  {phase:0,name:"Inventory & Stability",status:"complete",color:"#22c55e",summary:"Hardware online, mesh configured, roles defined, documentation framework established.",items:["relay + Kasa on shared LAN","Tailscale mesh all nodes","SSH mesh fully wired","Master file system (ARCH/OPS/PLAN/WORKFLOW)","vault restored after 108 days"]},
+  {phase:1,name:"Partial Automation (PoC)",status:"current",color:"#3b82f6",summary:"Individual pipelines proven at small scale. First AI breaker closed.",items:["iMessage AI PoC live","Expiry alerts daily","Diagnostics agent daily","Monthly maintenance automation","Routine dashboard + savings view","Rewards tracker live","Git commit UI with diff preview"]},
+  {phase:2,name:"Quality of Life",status:"upcoming",color:"#8b5cf6",summary:"Pipelines wired end-to-end. Behavioral notifications replace time-based alerts. RAG over personal data.",items:["RAG pipeline (email + financial + calendar)","iMessage triage layer (full confirm→execute)","Automated statement import","Recovery scoring dashboard","Mac Mini M5 Pro primary inference (Aug 2026)"]},
+  {phase:3,name:"Contextual Intelligence",status:"future",color:"#f59e0b",summary:"AiMe watches patterns, surfaces things proactively before you think of them.",items:["Context-triggered procedures","Behavioral notifications (location-aware)","Personal Context Graph","Full data sovereignty across all domains","Proactive anomaly surfacing"]},
+];
+
+const typeColors = {
+  OPS:    {bg:"#0f2340",border:"#1d4ed8",text:"#93c5fd"},
+  PLAN:   {bg:"#0f2a1a",border:"#16a34a",text:"#86efac"},
+  ARCH:   {bg:"#1e1040",border:"#7c3aed",text:"#c4b5fd"},
+  TRACKER:{bg:"#2a1a08",border:"#d97706",text:"#fcd34d"},
+};
+const statusLabel = {ok:"✅",warn:"⚠️",todo:"📋"};
+
+function AiMeStatus() {
+  const [tab, setTab] = useState("layers");
+  const [expanded, setExpanded] = useState(null);
+
+  const milestones = sessions.filter(s=>s.milestone).length;
+  const liveTrackers = trackers.filter(t=>t.status==="live").length;
+  const allItems = layers.flatMap(l=>l.items);
+  const okItems = allItems.filter(i=>i.status==="ok").length;
+  const todayCount = sessions.filter(s=>s.date==="2026-05-17").length;
+
+  return (
+    <div style={{fontFamily:"-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",background:"#0d1117",color:"#e2e8f0",minHeight:"100vh",padding:20}}>
+      <div style={{marginBottom:24}}>
+        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:4}}>
+          <span style={{fontSize:28}}>⚡</span>
+          <div>
+            <div style={{fontSize:22,fontWeight:700,letterSpacing:"-0.5px"}}>AiMe</div>
+            <div style={{fontSize:12,color:"#64748b"}}>Personal AI Infrastructure · Build Status · 2026-05-17</div>
+          </div>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:10,marginTop:14}}>
+          {[
+            {v:sessions.length,l:"Sessions",s:`${todayCount} shipped today`},
+            {v:milestones,l:"Milestones",s:"shipped"},
+            {v:`${okItems}/${allItems.length}`,l:"Systems OK",s:"across 4 layers"},
+            {v:`${liveTrackers}/6`,l:"Trackers Live",s:"on gateway"},
+          ].map(s=>(
+            <div key={s.l} style={{background:"#161b22",border:"1px solid #21262d",borderRadius:10,padding:"12px 14px"}}>
+              <div style={{fontSize:20,fontWeight:700}}>{s.v}</div>
+              <div style={{fontSize:11,color:"#94a3b8",marginTop:1}}>{s.l}</div>
+              <div style={{fontSize:10,color:"#475569"}}>{s.s}</div>
+            </div>
+          ))}
+        </div>
+        <div style={{marginTop:12,background:"#0f1f40",border:"1px solid #1d4ed844",borderRadius:10,padding:"10px 14px"}}>
+          <div style={{fontSize:11,color:"#93c5fd",fontWeight:700,marginBottom:3}}>📈 Build Trajectory</div>
+          <div style={{fontSize:11,color:"#64748b",lineHeight:1.7}}>
+            <span style={{color:"#475569"}}>Phase 1 (pre-May):</span> Exploratory — ChatGPT-era infra, no naming conventions, mesh silently expired, vault offline 108 days.&nbsp;
+            <span style={{color:"#475569"}}>Phase 2 (May 3):</span> Inflection — stopped building, started designing. Master files, session ritual, data classification policy, git.&nbsp;
+            <span style={{color:"#93c5fd",fontWeight:600}}>Phase 3 (now):</span> Exponential — every session ships something. Transmission system built. First AI breaker closed.
+          </div>
+        </div>
+      </div>
+
+      <div style={{display:"flex",gap:2,marginBottom:18,borderBottom:"1px solid #21262d"}}>
+        {[["layers","🏗 Layers"],["timeline","📅 Timeline"],["trackers","📊 Trackers"],["roadmap","🗺 Roadmap"]].map(([id,label])=>(
+          <button key={id} onClick={()=>setTab(id)} style={{background:"none",border:"none",borderBottom:tab===id?"2px solid #3b82f6":"2px solid transparent",color:tab===id?"#e2e8f0":"#64748b",padding:"6px 14px",cursor:"pointer",fontSize:13,fontWeight:tab===id?600:400}}>{label}</button>
+        ))}
+      </div>
+
+      {tab==="layers" && (
+        <div>
+          <div style={{fontSize:11,color:"#475569",marginBottom:14,fontStyle:"italic"}}>CYME Gateway pattern: collection perimeter → control plane → analytical layer → on-demand compute</div>
+          {layers.map((layer,li)=>{
+            const open = expanded===li;
+            const counts = {ok:layer.items.filter(i=>i.status==="ok").length,warn:layer.items.filter(i=>i.status==="warn").length,todo:layer.items.filter(i=>i.status==="todo").length};
+            return (
+              <div key={layer.name} style={{marginBottom:10,borderRadius:10,border:`1px solid ${layer.color}33`,overflow:"hidden",background:"#161b22"}}>
+                <div onClick={()=>setExpanded(open?null:li)} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"12px 16px",cursor:"pointer",borderLeft:`3px solid ${layer.color}`}}>
+                  <div style={{display:"flex",alignItems:"center",gap:10}}>
+                    <span style={{fontSize:18}}>{layer.icon}</span>
+                    <div>
+                      <div style={{fontWeight:600,fontSize:13}}>{layer.name}</div>
+                      <div style={{color:"#64748b",fontSize:11}}>{layer.analogy}</div>
+                    </div>
+                  </div>
+                  <div style={{display:"flex",alignItems:"center",gap:10}}>
+                    <div style={{display:"flex",gap:6,fontSize:12}}>
+                      {counts.ok>0 && <span style={{color:"#22c55e"}}>✅ {counts.ok}</span>}
+                      {counts.warn>0 && <span style={{color:"#f59e0b"}}>⚠️ {counts.warn}</span>}
+                      {counts.todo>0 && <span style={{color:"#475569"}}>📋 {counts.todo}</span>}
+                    </div>
+                    <span style={{color:"#475569",fontSize:11}}>{open?"▲":"▼"}</span>
+                  </div>
+                </div>
+                {open && layer.items.map(item=>(
+                  <div key={item.name} style={{display:"flex",gap:10,padding:"9px 16px",borderTop:"1px solid #21262d"}}>
+                    <span style={{fontSize:13,minWidth:18,paddingTop:1}}>{statusLabel[item.status]}</span>
+                    <div>
+                      <div style={{fontSize:13,fontWeight:500}}>{item.name}</div>
+                      <div style={{fontSize:11,color:"#64748b",lineHeight:1.5}}>{item.note}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            );
+          })}
+          <div style={{marginTop:14,background:"#161b22",borderRadius:10,padding:14,border:"1px solid #21262d"}}>
+            <div style={{fontWeight:700,fontSize:12,marginBottom:10,color:"#94a3b8"}}>Remaining Gaps — Priority Order</div>
+            {[
+              ["🟡","Directory rename","relay at /opt/personal-os/, gateway/compute not started — all /opt/local-ai/ references are stale"],
+              ["⚠️","Kasa ghost rows","2 stale CSV files on relay — 2-min cleanup, just hasn't happened yet"],
+              ["📋","Session C not built","iMessage Gateway design done, build unblocked — next capability jump"],
+              ["📋","Inventory rescans stale","Nov 2025 data; per-host rescans queued"],
+              ["📋","Compute sleep/wake","outlet order wrong, hibernation wait not implemented — testing pending"],
+            ].map(([tag,title,desc])=>(
+              <div key={title} style={{display:"flex",gap:10,marginBottom:8}}>
+                <span style={{fontSize:13,minWidth:20,paddingTop:1}}>{tag}</span>
+                <div>
+                  <div style={{fontSize:12,fontWeight:600}}>{title}</div>
+                  <div style={{fontSize:11,color:"#64748b"}}>{desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {tab==="timeline" && (
+        <div>
+          <div style={{fontSize:11,color:"#475569",marginBottom:14}}>⭐ = milestone · {sessions.length} sessions total · {todayCount} shipped today</div>
+          {sessions.map((s,i)=>{
+            const tc = typeColors[s.type]||typeColors.OPS;
+            const isToday = s.date==="2026-05-17";
+            return (
+              <div key={i} style={{display:"flex",gap:12,marginBottom:4}}>
+                <div style={{display:"flex",flexDirection:"column",alignItems:"center",minWidth:14,paddingTop:4}}>
+                  <div style={{width:10,height:10,borderRadius:"50%",background:s.milestone?"#f59e0b":isToday?"#3b82f6":"#21262d",border:`2px solid ${s.milestone?"#fbbf24":isToday?"#60a5fa":"#475569"}`,flexShrink:0}}/>
+                  {i<sessions.length-1 && <div style={{width:1,background:"#21262d",flex:1,marginTop:3}}/>}
+                </div>
+                <div style={{flex:1,background:"#161b22",borderRadius:8,padding:"10px 13px",marginBottom:6,border:s.milestone?"1px solid #f59e0b33":isToday?"1px solid #1d4ed844":"1px solid #21262d"}}>
+                  <div style={{display:"flex",flexWrap:"wrap",alignItems:"center",gap:7,marginBottom:5}}>
+                    <span style={{background:tc.bg,color:tc.text,border:`1px solid ${tc.border}`,fontSize:10,fontWeight:600,padding:"1px 7px",borderRadius:4}}>{s.type}</span>
+                    <span style={{color:"#475569",fontSize:11}}>{s.date}</span>
+                    {s.milestone && <span style={{color:"#f59e0b",fontSize:10,fontWeight:600}}>⭐ milestone</span>}
+                    {isToday && !s.milestone && <span style={{color:"#60a5fa",fontSize:10}}>today</span>}
+                  </div>
+                  <div style={{fontSize:13,fontWeight:600,marginBottom:3}}>{s.title}</div>
+                  <div style={{fontSize:11,color:"#64748b",lineHeight:1.5}}>{s.summary}</div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {tab==="trackers" && (
+        <div>
+          <div style={{fontSize:11,color:"#475569",marginBottom:14}}>All trackers served by gateway over private Tailscale mesh · {liveTrackers}/6 fully live</div>
+          {trackers.map(t=>{
+            const s = t.status==="live"
+              ? {bg:"#0f2a1a",border:"#16a34a",text:"#86efac",label:"LIVE"}
+              : {bg:"#2a1a08",border:"#d97706",text:"#fcd34d",label:"PARTIAL"};
+            return (
+              <div key={t.name} style={{background:"#161b22",borderRadius:9,padding:"13px 16px",marginBottom:9,border:"1px solid #21262d"}}>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:4}}>
+                  <div style={{display:"flex",alignItems:"center",gap:8}}>
+                    <span style={{background:s.bg,color:s.text,border:`1px solid ${s.border}`,fontSize:10,fontWeight:600,padding:"1px 7px",borderRadius:4}}>{s.label}</span>
+                    <span style={{fontWeight:600,fontSize:14}}>{t.name}</span>
+                  </div>
+                  <code style={{fontSize:11,color:"#475569"}}>{t.url}</code>
+                </div>
+                <div style={{fontSize:11,color:"#64748b"}}>{t.note}</div>
+              </div>
+            );
+          })}
+          <div style={{marginTop:16,background:"#161b22",borderRadius:10,padding:14,border:"1px solid #21262d"}}>
+            <div style={{fontWeight:700,fontSize:12,marginBottom:10,color:"#94a3b8"}}>Automation vs AI — Honest Breakdown</div>
+            <div style={{marginBottom:10}}>
+              <div style={{fontSize:11,color:"#64748b",marginBottom:6}}><span style={{color:"#22c55e",fontWeight:600}}>1 live AI component</span> — iMessage PoC: message in → Mistral 7B reasons → reply out. No external APIs. No data off-mesh.</div>
+              <div style={{fontSize:11,color:"#64748b"}}><span style={{color:"#f59e0b",fontWeight:600}}>~15 automation components live</span> — deterministic scripts and schedulers with no model reasoning: expiry alerts, diagnostics, maintenance loop, Kasa telemetry, all 6 trackers, sync-to-git, git commit UI.</div>
+            </div>
+            <div style={{fontSize:11,color:"#475569",borderTop:"1px solid #21262d",paddingTop:8}}>Session C (iMessage Gateway) is the next real AI leap. The transmission system is built — Session C closes the first production breaker.</div>
+          </div>
+        </div>
+      )}
+
+      {tab==="roadmap" && (
+        <div>
+          <div style={{fontSize:11,color:"#475569",marginBottom:14}}>Phase framework — where AiMe is and where it's going</div>
+          {roadmap.map(r=>{
+            const cfg = r.status==="complete"
+              ? {bg:"#0f2a1a",border:"#16a34a",badge:"#86efac",label:"✅ Complete"}
+              : r.status==="current"
+              ? {bg:"#0f1f40",border:"#3b82f6",badge:"#93c5fd",label:"🔧 In progress"}
+              : r.status==="upcoming"
+              ? {bg:"#1e1040",border:"#7c3aed",badge:"#c4b5fd",label:"⬜ Upcoming"}
+              : {bg:"#161b22",border:"#21262d",badge:"#475569",label:"⬜ Future"};
+            return (
+              <div key={r.phase} style={{background:cfg.bg,border:`1px solid ${cfg.border}44`,borderLeft:`3px solid ${r.color}`,borderRadius:10,padding:"14px 16px",marginBottom:12}}>
+                <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:6}}>
+                  <span style={{background:"#0d1117",color:r.color,border:`1px solid ${r.color}44`,fontSize:11,fontWeight:700,padding:"2px 9px",borderRadius:4}}>Phase {r.phase}</span>
+                  <span style={{fontWeight:700,fontSize:14}}>{r.name}</span>
+                  <span style={{color:cfg.badge,fontSize:11,marginLeft:"auto"}}>{cfg.label}</span>
+                </div>
+                <div style={{fontSize:12,color:"#94a3b8",marginBottom:10,lineHeight:1.5}}>{r.summary}</div>
+                <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
+                  {r.items.map(item=>(
+                    <span key={item} style={{background:"#0d1117",border:`1px solid ${r.color}33`,color:"#94a3b8",fontSize:11,padding:"3px 9px",borderRadius:4}}>{item}</span>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+          <div style={{marginTop:8,background:"#161b22",borderRadius:10,padding:14,border:"1px solid #21262d"}}>
+            <div style={{fontWeight:700,fontSize:12,marginBottom:8,color:"#94a3b8"}}>About this dashboard</div>
+            <div style={{fontSize:11,color:"#64748b",lineHeight:1.6}}>
+              This is the live build status of AiMe — a local AI infrastructure project running on personal hardware. Trackers and dashboards run on a private mesh and are not publicly accessible, but the architecture and documentation are open source.<br/><br/>
+              <a href="https://github.com/tandrew101/a-i-me" style={{color:"#3b82f6",textDecoration:"none"}}>github.com/tandrew101/a-i-me</a>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<AiMeStatus />);
+</script>
+</body>
+</html>
