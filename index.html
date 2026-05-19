@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AiMe — Build Status</title>
+  <title>AiMe — Personal AI Infrastructure</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
@@ -14,297 +14,466 @@
 <script type="text/babel">
 const {useState} = React;
 
-const sessions = [
-  {date:"2026-04-08",type:"OPS",title:"Pi Stabilization & Network Cleanup",milestone:false,summary:"P252 aluminum case, hardware watchdog, hostname persistence fix. relay + Kasa onto shared LAN subnet. relay renamed from orchestrator-prod-home."},
-  {date:"2026-04-25",type:"ARCH",title:"Architecture Foundations",milestone:true,summary:"CYME Gateway analogy codified. Four master files established. Node roster finalized. Mac Mini M5 Pro (Aug 2026) locked as future primary compute node."},
-  {date:"2026-04-27",type:"OPS",title:"Mesh Recovery + Maintenance Planning",milestone:false,summary:"Tailscale mesh fully recovered. Key expiry disabled on all infra nodes. Monthly maintenance procedure documented."},
-  {date:"2026-04-30",type:"PLAN",title:"Workflow/Plan Overhaul + Publishing Package",milestone:true,summary:"WORKFLOW.md major overhaul: ADHD-friendly session ritual, manual routines, milestone publishing, runcmd discipline. PLAN.md restructured into four Completed Tools categories."},
-  {date:"2026-05-03",type:"PLAN",title:"README Overhaul",milestone:true,summary:"Full README rewrite. AiMe name committed. CYME parallel table for technical audience. Decision Archaeology use case. For Builders section."},
-  {date:"2026-05-03",type:"PLAN",title:"Workflow File Structure Refinement",milestone:false,summary:"3-column TOC. Supplemental/ folder created. Three-pattern tracker workflow table."},
-  {date:"2026-05-08",type:"PLAN",title:"Supply Chain Incident Response",milestone:false,summary:"Bitwarden CLI incident (no exposure). AI hot-swap principle added. Isolate-before-executing principle documented."},
-  {date:"2026-05-08",type:"PLAN",title:"Security, Identity & Domain Setup",milestone:true,summary:"Ente Auth replaced Authy. a-i-me.com registered. GitHub repo created. Verizon Number Lock verified."},
-  {date:"2026-05-08",type:"PLAN",title:"Git Infrastructure Setup",milestone:true,summary:"Gateway git repo initialized. sync-to-git.sh built — replaces .bak dance entirely. iCloud → gateway rsync + commit in one command."},
-  {date:"2026-05-09",type:"PLAN",title:"Routines, Procedures & System Design",milestone:true,summary:"ROUTINES.md finalized (56 tasks). PROCEDURES.md created. LESSONS_LEARNED.md born. 66-day habit checkpoint. Gamification as first-class ADHD design tool."},
-  {date:"2026-05-09",type:"OPS",title:"Routines Dashboard Deploy + Tracker Workflow",milestone:true,summary:"routine-dashboard.html live on gateway. Portal back-link standard. Tracker workflows standardized."},
-  {date:"2026-05-10",type:"OPS",title:"Tracker Symlinks + Dashboard v2",milestone:false,summary:"All 7 tracker files symlinked to docs git repo. Daily tab + Installation Status chart mode. tasks.json with status field on all tasks."},
-  {date:"2026-05-11",type:"PLAN",title:"Review, Cleanup & Planning",milestone:false,summary:"Session file audit confirmed. WIP limits established. BENEFITS.md updated. 8 new LESSONS_LEARNED entries."},
-  {date:"2026-05-11",type:"OPS",title:"iMessage AI PoC — End-to-End Working",milestone:true,summary:"imessage_ai.py: SQLite poll of Messages.db → attributedBody plist extraction → Mistral 7B via Ollama → AppleScript reply. Echo guard, parse-failure retry. Zero external APIs."},
-  {date:"2026-05-12",type:"ARCH",title:"Data Classification System + Git Commit UI",milestone:true,summary:"T1–T3 sensitivity policy formalized. Aggregation rule codified (bus fault analogy). Git commit UI with diff preview built and deployed on gateway."},
-  {date:"2026-05-12",type:"OPS",title:"Supply Chain Assessment + Commit UI Bug Fix",milestone:false,summary:"Critical --delete bug wiping docs git history on every Sync+Commit. Fixed. Docs repo re-initialized with 61 files."},
-  {date:"2026-05-14",type:"OPS",title:"Kasa Telemetry Restored + Dashboard Feeds",milestone:true,summary:"telemetry.yaml fixed (stale Cox IP → correct LAN IP). Kasa dashboard feed live. Root cause of 6-month outage found and resolved."},
-  {date:"2026-05-14",type:"TRACKER",title:"Routines Schema Expansion + Use Cases",milestone:false,summary:"6 new fields added to tasks.json. iMessage tracker integration designed: hybrid command grammar, confirm-execute state machine, sensitivity routing."},
-  {date:"2026-05-15",type:"OPS",title:"Vault Stability + MS Money Pipeline",milestone:true,summary:"vault back online after 108 days. Citrix bloat removed. MS Money QIF import verified. SSH mesh extended to vault."},
-  {date:"2026-05-15",type:"OPS",title:"Git Commit UI v3.1 + Dashboard Fixes",milestone:false,summary:"Timestamps, per-file collapsible diffs, single Sync+Commit button. Tailscale peer pill regex fixed. Inventory catalog pipeline fixed."},
-  {date:"2026-05-16",type:"OPS",title:"Docs Viewer + Status Dashboard v2 + Sessions Index",milestone:true,summary:"AiMe Docs Viewer (13 docs, 4 groups, session start cheat sheet). Build Status Dashboard v2 with phase trajectory and AI vs Mechanical breakdown. sessions/INDEX.md with 42 entries."},
-  {date:"2026-05-16",type:"OPS",title:"Workflow Cleanup + Session File Sweep",milestone:false,summary:"Terminology block for master/project/gateway files. Complete session audit: 42 files confirmed, 5 filename typos fixed."},
-  {date:"2026-05-17",type:"OPS",title:"Hostname Renames + Inference Stack",milestone:false,summary:"All Mac nodes renamed (gateway, compute, viewer). DeepSeek R1 14B Modelfile (65K context) on viewer. Compute R1 32B (19GB) confirmed — primary on-demand inference node."},
-  {date:"2026-05-17",type:"TRACKER",title:"Routine Dashboard Savings Tab",milestone:true,summary:"Savings tab live: ~380→~195→~185 hrs/yr, ≈5 work weeks callout, 3-bucket drilldown (🚫⚡🧠). Chart detail Heavy/Light time bars by mode. Rewards data: 28 programs, 18 credits, 5 gift cards loaded. Publishing gate cleared."},
-  {date:"2026-05-17",type:"PLAN",title:"README Overhaul + GitHub Pages Launch",milestone:false,summary:"GTD-first framing. Routines dashboard as centerpiece. Notable Innovations section. Personal statement. a-i-me.com live on GitHub Pages."},
+// Newest first
+const milestones = [
+  {date:"2026-05-17", icon:"🚀",
+   title:"Public site + savings dashboard live",
+   summary:"a-i-me.com live on GitHub Pages. Routine savings dashboard shows ~5 work weeks reclaimed per year across 56 tracked tasks. 28 rewards programs and 18 travel credits loaded."},
+  {date:"2026-05-16", icon:"📁",
+   title:"Live documentation viewer",
+   summary:"All architecture and ops files now readable from a live web interface on the home server. Changes visible in real time without downloading anything."},
+  {date:"2026-05-15", icon:"💻",
+   title:"Windows machine back online",
+   summary:"The Samsung Galaxy Book (offline 108 days) restored and stabilized. MS Money installed and verified. The offline-first financial hub is active again."},
+  {date:"2026-05-14", icon:"⚡",
+   title:"Power monitoring restored",
+   summary:"Fixed a 6-month outage caused by a stale IP address from a November network change. All 6 smart outlets now streaming watt data every 60 seconds."},
+  {date:"2026-05-12", icon:"🔒",
+   title:"Data privacy policy formalized",
+   summary:"Every piece of data classified by sensitivity. Clear rules for what external AI can see (infrastructure questions only) and what it can never see (finances, health, location — local only)."},
+  {date:"2026-05-11", icon:"🤖",
+   title:"AI answers your messages",
+   summary:"End-to-end: send a text to a designated number → home server routes it to a local AI model → reply arrives back in iMessage. Zero cloud APIs. Nothing leaves the network."},
+  {date:"2026-05-09", icon:"📊",
+   title:"All 6 dashboards deployed",
+   summary:"Routines, fitness, Audi, Lexus, rewards, and portal all live on the home server. Accessible from anywhere on the private mesh."},
+  {date:"2026-05-09", icon:"📣",
+   title:"First automated loop running",
+   summary:"Monthly system health check: SSH into each machine, verify status, send a notification. The first thing that fires on its own without being asked."},
+  {date:"2026-05-08", icon:"⚙️",
+   title:"Version control + sync workflow",
+   summary:"Every build session now commits to git automatically. Master files sync from phone to server. Nothing gets lost between sessions."},
+  {date:"2026-05-08", icon:"🔐",
+   title:"Security foundations locked",
+   summary:"Moved all two-factor authentication codes off Twilio (breached 2022) onto an end-to-end encrypted app. Registered a-i-me.com. Verified phone number can't be ported without a PIN."},
+  {date:"2026-05-03", icon:"🌐",
+   title:"Published publicly",
+   summary:"Complete README written and published on GitHub. Project has a name, a philosophy, and a public presence."},
+  {date:"2026-04-30", icon:"📋",
+   title:"Operating manual written",
+   summary:"Full workflow documentation: how to build this, how to run sessions, how to track what's been built. The project now has a real operating system, not just notes."},
+  {date:"2026-04-25", icon:"📐",
+   title:"System designed from scratch",
+   summary:"Built a complete architectural blueprint: roles, data flows, privacy rules, naming conventions. Gave the project a name: AiMe."},
+  {date:"2026-04-08", icon:"🔌",
+   title:"Claude-era rebuild begins",
+   summary:"All machines reconnected and documented. Private mesh verified. This marks the start of the structured phase — the ChatGPT-era build (~1 year prior) wasn't systematically documented."},
 ];
 
-const layers = [
-  {name:"Collection Perimeter",analogy:"Metering / RTU Layer",icon:"📡",color:"#3b82f6",items:[
-    {name:"relay (Pi 3B)",status:"ok",note:"Kasa polling, subnet router, exit node. P252 case 40–47°C, hardware watchdog ✅, hostname persistence ✅"},
-    {name:"Kasa HS300 + HS103",status:"ok",note:"All outlets online. telemetry.yaml fixed. CSVs every 60s. Dashboard feed live."},
-    {name:"Kasa ghost rows",status:"warn",note:"Stale Local-AI.csv + MBP-Fan.csv still showing in dashboard. 2-min cleanup queued."},
-    {name:"MS Money (vault)",status:"ok",note:"Vault back online 2026-05-15. QIF import path verified. Transaction catch-up queued."},
-    {name:"Oura Ring API",status:"todo",note:"Integration designed. Not yet built. Gate: Session D (RAG pipeline)."},
-  ]},
-  {name:"Control Plane",analogy:"EMS / SCADA Layer",icon:"🖥",color:"#8b5cf6",items:[
-    {name:"gateway (M1 MacBook Air)",status:"ok",note:"Always-on. Caddy :8080. Sleep disabled. Dashboard live. SSD audit complete 2026-05-16 — 82GB free."},
-    {name:"Tailscale mesh",status:"ok",note:"All 5 nodes online. Key expiry disabled on infra nodes. P2P to all nodes confirmed."},
-    {name:"Gateway Dashboard",status:"warn",note:"Kasa ✅, peer pills ✅. Dock hold ❌ (no hold.json). MBP ping ❌ (no ping.csv)."},
-    {name:"Git Commit UI",status:"ok",note:"Flask UI on gateway. Timestamps, collapsible diffs, single Sync+Commit. --delete bug fixed."},
-    {name:"sync-to-git.sh",status:"ok",note:"iCloud → gateway rsync + git commit. Both repos in one call."},
-    {name:"Inventory catalog",status:"warn",note:"Pipeline fixed 2026-05-15. 462 scripts × 4 hosts — Nov 2025 data. Rescans queued."},
-    {name:"expiry_alerts.py",status:"ok",note:"Daily 07:00. Threshold-once gating 30/60d. Pushover + iMessage doorbell."},
-    {name:"iMessage listener",status:"ok",note:"KeepAlive LaunchAgent. FDA granted. Messages.app Login Item. Always-on."},
-    {name:"diagnostics.py",status:"ok",note:"Daily 06:00. SSH health checks on all nodes. HTML report. Doorbell on DEGRADED/CRITICAL."},
-  ]},
-  {name:"Analytical Layer",analogy:"State Estimator / Load Flow",icon:"🧠",color:"#10b981",items:[
-    {name:"iMessage AI PoC",status:"ok",note:"End-to-end live: SQLite poll → Mistral 7B → AppleScript reply. Echo guard active. Zero external APIs."},
-    {name:"iMessage Gateway (Session C)",status:"todo",note:"Design complete. Confirm-execute state machine, sensitivity routing. Build unblocked and ready."},
-    {name:"Ollama — Mistral 7B (gateway)",status:"ok",note:"Always-on. iMessage PoC wired. 8GB RAM — light/conversational inference."},
-    {name:"DeepSeek R1 32B (compute)",status:"ok",note:"19GB pulled 2026-05-17. AMD Radeon 5500M 8GB + 32GB RAM. Primary on-demand inference node."},
-    {name:"DeepSeek R1 14B (viewer)",status:"ok",note:"MLX/Metal on M3. Modelfile: 65K context. Travel offline AI. Open WebUI live."},
-    {name:"LlamaIndex + FastAPI (vault)",status:"warn",note:"Installed. Not yet wired to MS Money pipeline. Gate: Session D."},
-    {name:"Data Classification Policy",status:"ok",note:"T1–T3 tiers. Aggregation rule (bus fault model). Model routing rules defined."},
-  ]},
-  {name:"On-Demand Compute",analogy:"Peaking Unit / Spinning Reserve",icon:"⚡",color:"#f59e0b",items:[
-    {name:"compute (Intel MBP 16\", 32GB)",status:"warn",note:"R1 32B ✅ 19GB. Sleep/wake partially built — outlet order wrong, hibernation wait needed before cut."},
-    {name:"vault (Galaxy Book Go)",status:"ok",note:"Back online 2026-05-15. Citrix removed. MS Money ✅. SSH ✅. Windows-native task runner."},
-    {name:"viewer (M3 MacBook Air)",status:"ok",note:"Travel thin client. R1 14B + custom Modelfile (65K ctx). Open WebUI. Offline AI fallback tested."},
-    {name:"Mac Mini M5 Pro",status:"todo",note:"Planned Aug 2026. 48GB RAM → unlocks 70B models. Always-on inference server. Absorbs vault Windows role."},
-  ]},
+const benefits = [
+  {
+    icon:'⏱️',
+    title:'Time back from recurring overhead',
+    color:'#50cc80',
+    status:'live',
+    stat:'~195 hrs/yr',
+    statNote:'at full deployment',
+    live:'~38 hrs/yr running automatically today',
+    points:[
+      '56 recurring tasks tracked: finance, travel, health, admin, home management',
+      'Most run automatically or fire a single-tap confirmation',
+      '≈ 5 forty-hour work weeks reclaimed per year at full deployment',
+      'Biggest wins: weekly cash flow review, monthly credit tracking, annual renewal reminders',
+    ],
+  },
+  {
+    icon:'💳',
+    title:'Card credits & rewards — nothing slips by',
+    color:'#f59e0b',
+    status:'live',
+    stat:'28 programs',
+    statNote:'tracked, alerting daily at 7am',
+    live:'18 flight/travel credits · 5 gift cards · 12 card benefits',
+    points:[
+      'Daily 7am alert catches any expiry within 60 days before you notice',
+      'Tiered urgency: 60 days (heads up) → 30 days (act soon) → 7 days (urgent)',
+      'Amex Platinum, Chase, Capital One, Bilt, Citi — plus airline miles and hotel points',
+      'Live example: Saks credit ($50) ends permanently July 1, 2026 — AiMe flagged it months out',
+    ],
+  },
+  {
+    icon:'🚗',
+    title:'Vehicle maintenance — know what actually needs doing',
+    color:'#c09010',
+    status:'live',
+    stat:'2 vehicles',
+    statNote:'12yr Audi history analyzed',
+    live:'circuit-breaker priority model live',
+    points:[
+      '2001 Audi A4 1.8T — 12 years of service history analyzed and prioritized',
+      '2003 Lexus ES300 — acquired recently, building the history log',
+      'Circuit-breaker model: "critical and overdue" vs "can wait" — not just a list of dates',
+      'Annual spend summary; safety-critical items flagged separately from cosmetic ones',
+    ],
+  },
+  {
+    icon:'💪',
+    title:'Fitness tracking — years of data, one view',
+    color:'#d04878',
+    status:'live',
+    stat:'6+ years',
+    statNote:'25 training cycles tracked',
+    live:'full history 2019–2026',
+    points:[
+      'Complete strength training history from 2019 to present — nothing lost to app migrations',
+      'Training max trajectory with long-range trend — see where you\'re heading, not just where you\'ve been',
+      'AMRAP performance chart surfaces fatigue patterns and undertrained cycles',
+      'Session log with exception flags; qualitative notes alongside the numbers',
+    ],
+  },
+  {
+    icon:'🤖',
+    title:'Ask questions — get answers from your own data',
+    color:'#3a7bd5',
+    status:'partial',
+    stat:'Local AI',
+    statNote:'no cloud, no subscriptions',
+    live:'iMessage PoC running — general questions today',
+    points:[
+      'Text a question to a designated number → local AI answers → reply arrives in iMessage',
+      'DeepSeek R1 running on home hardware (14B on travel laptop, 32B on desktop)',
+      'Nothing leaves your home network — not even for the AI inference step',
+      'Goal: ask about finances, health history, car maintenance, travel — locally, from anywhere',
+    ],
+  },
+  {
+    icon:'📊',
+    title:'Financial picture — offline, private, no third parties',
+    color:'#5a9ad5',
+    status:'building',
+    stat:'MS Money',
+    statNote:'offline Windows app, local only',
+    live:'vault restored, catch-up in progress',
+    points:[
+      'MS Money (offline app) — all accounts, investments, transactions since 2009',
+      'No bank credentials shared with anyone. Imports from downloaded statement files',
+      'Goal: ask "what are my tax lots?" or "what did I spend last quarter?" — locally',
+      'Net worth, cash flow, transaction history — queryable without leaving your network',
+    ],
+  },
 ];
 
 const trackers = [
-  {name:"Routine Dashboard",status:"live",url:"/gateway/routines/",note:"Savings tab: ~380→~195→~185 hrs/yr, ≈5 work weeks. 56 tasks, 3-bucket drilldown, mode-aware time bars."},
-  {name:"5/3/1 Training",status:"live",url:"/gateway/531/",note:"25 cycles (Mar 2019–Apr 2026). TM history, AMRAP scatter, session log. Gaps: cycle planning, RPE."},
-  {name:"Audi Maintenance",status:"live",url:"/gateway/audi/",note:"12-year log, ~$27k documented. Circuit breaker model for vehicle systems."},
-  {name:"Lexus Maintenance",status:"partial",url:"/gateway/lexus/",note:"Initialized. First repair event seeded. Building out the log."},
-  {name:"Rewards & Cards",status:"partial",url:"/gateway/rewards/",note:"expiry_alerts.py daily. 28 programs, 18 credits, 5 gift cards loaded. Card Perks tab incomplete."},
-  {name:"Trackers Portal",status:"live",url:"/gateway/trackers/",note:"Hub for all 6 dashboards. Live expiry count from data.json on load."},
+  {name:'Routine Dashboard',   url:'/gateway/routines/', status:'live',
+   why:'56 recurring tasks tracked — their cadence, automation state, and how much time they save per year.',
+   metric:'~195 hrs/yr at full deployment · ~38 hrs/yr live today'},
+  {name:'5/3/1 Training',      url:'/gateway/531/',      status:'live',
+   why:'6+ years of strength training data in one view. Long-range training max trajectory, AMRAP scatter chart, session log.',
+   metric:'25 cycles · Mar 2019 – Apr 2026'},
+  {name:'Audi Maintenance',    url:'/gateway/audi/',     status:'live',
+   why:'Circuit-breaker model for a 23-year-old car. What\'s critical vs what can wait, with 12 years of service history.',
+   metric:'12-year log · ~$27k documented'},
+  {name:'Lexus Maintenance',   url:'/gateway/lexus/',    status:'partial',
+   why:'Recently acquired. Same circuit-breaker model as Audi. Building the history log now.',
+   metric:'Log in progress'},
+  {name:'Rewards & Credits',   url:'/gateway/rewards/',  status:'partial',
+   why:'28 programs, 18 travel credits, 5 gift cards, 12 card benefits. Daily expiry alerts at 7am.',
+   metric:'28 programs · daily alerts'},
+  {name:'Trackers Portal',     url:'/gateway/trackers/', status:'live',
+   why:'Hub for all dashboards with live expiry summary on load.',
+   metric:'All trackers in one place'},
+  // ── Wishlist ──
+  {name:'Recovery Dashboard',  url:'', status:'wishlist',
+   why:'Oura Ring + Apple Watch unified recovery score. Daily log: HRV, sleep quality, readiness. Phase 1 manual tap input; Phase 2 Oura API auto-pull.',
+   metric:'Gate: Oura API pipeline'},
+  {name:'Consumables Tracker', url:'', status:'wishlist',
+   why:'Track replacement dates and reorder timing for household consumables — toothbrush heads, batteries, subscriptions. Alert when due.',
+   metric:''},
+  {name:'Food Expiration Tracker', url:'', status:'wishlist',
+   why:'Track household food with purchase and expected expiry dates. Alert at 3 days before. Future: photo OCR via local vision model.',
+   metric:''},
+  {name:'GTD Capture Pipeline', url:'', status:'wishlist',
+   why:'Capture tasks via iMessage or voice, auto-classify with local AI, surface to appropriate context list. Replaces manual in-basket processing.',
+   metric:'Gate: Session C (iMessage triage)'},
+  {name:'Finance Dashboard',   url:'', status:'wishlist',
+   why:'MS Money + local AI: searchable financial history, cash flow projection, tax lots, portfolio. Local only — never external.',
+   metric:'Gate: Session D (RAG pipeline)'},
+  {name:'Serendipity Log',     url:'', status:'wishlist',
+   why:'Capture interesting connections and patterns over time. Append-only, eventually auto-populated by AiMe.',
+   metric:''},
 ];
 
 const roadmap = [
-  {phase:0,name:"Inventory & Stability",status:"complete",color:"#22c55e",summary:"Hardware online, mesh configured, roles defined, documentation framework established.",items:["relay + Kasa on shared LAN","Tailscale mesh all nodes","SSH mesh fully wired","Master file system (ARCH/OPS/PLAN/WORKFLOW)","vault restored after 108 days"]},
-  {phase:1,name:"Partial Automation (PoC)",status:"current",color:"#3b82f6",summary:"Individual pipelines proven at small scale. First AI breaker closed.",items:["iMessage AI PoC live","Expiry alerts daily","Diagnostics agent daily","Monthly maintenance automation","Routine dashboard + savings view","Rewards tracker live","Git commit UI with diff preview"]},
-  {phase:2,name:"Quality of Life",status:"upcoming",color:"#8b5cf6",summary:"Pipelines wired end-to-end. Behavioral notifications replace time-based alerts. RAG over personal data.",items:["RAG pipeline (email + financial + calendar)","iMessage triage layer (full confirm→execute)","Automated statement import","Recovery scoring dashboard","Mac Mini M5 Pro primary inference (Aug 2026)"]},
-  {phase:3,name:"Contextual Intelligence",status:"future",color:"#f59e0b",summary:"AiMe watches patterns, surfaces things proactively before you think of them.",items:["Context-triggered procedures","Behavioral notifications (location-aware)","Personal Context Graph","Full data sovereignty across all domains","Proactive anomaly surfacing"]},
+  {phase:0, icon:'🔌', name:'Hardware & Mesh', status:'done', color:'#22c55e',
+   headline:'All machines connected and talking to each other.',
+   what:'Built a private encrypted network across 5 home machines. Defined roles, documented everything, got the foundation solid.',
+   items:['Private mesh — 5 machines, always reachable','Always-on home server (M1 MacBook Air)','Raspberry Pi relay + smart power outlets','Windows laptop for MS Money + local AI','Travel laptop with offline AI fallback']},
+  {phase:1, icon:'⚡', name:'First Automations', status:'current', color:'#3b82f6',
+   headline:'The first loops are running. Things fire automatically.',
+   what:'Individual automations proven and deployed: alerts, monitors, dashboards. This is where AiMe starts saving time every day.',
+   items:['Daily reward expiry alerts (7am)','Daily system health check (6am)','Monthly maintenance automation','6 live dashboards','iMessage AI — text a question, get a local answer','Routine time savings tracker']},
+  {phase:2, icon:'🧠', name:'Connected Intelligence', status:'upcoming', color:'#8b5cf6',
+   headline:'Ask questions about your own life. Get smart, local answers.',
+   what:'Pipelines connected end-to-end. Ask AiMe about your finances, health, travel, or calendar and get an answer from your own data — without touching a cloud service.',
+   items:['Search over email + financial records','Full iMessage conversational interface','MS Money automated catch-up','Recovery scoring (Oura + Apple Watch)','Mac Mini M5 Pro — always-on inference (Aug 2026)']},
+  {phase:3, icon:'✨', name:'Proactive Intelligence', status:'future', color:'#f59e0b',
+   headline:'AiMe acts before you have to think about it.',
+   what:'The system watches patterns and surfaces things proactively — not because it\'s scheduled, but because context makes it relevant right now.',
+   items:['Context-triggered alerts (not just time-based)','Location-aware notifications','Pattern recognition over personal history','Full data sovereignty — everything local','Surfaces things before you know you need them']},
 ];
 
-const typeColors = {
-  OPS:    {bg:"#0f2340",border:"#1d4ed8",text:"#93c5fd"},
-  PLAN:   {bg:"#0f2a1a",border:"#16a34a",text:"#86efac"},
-  ARCH:   {bg:"#1e1040",border:"#7c3aed",text:"#c4b5fd"},
-  TRACKER:{bg:"#2a1a08",border:"#d97706",text:"#fcd34d"},
-};
-const statusLabel = {ok:"✅",warn:"⚠️",todo:"📋"};
-
 function AiMeStatus() {
-  const [tab, setTab] = useState("layers");
+  const [tab, setTab]           = useState('benefits');
   const [expanded, setExpanded] = useState(null);
+  const [showAll, setShowAll]   = useState(false);
 
-  const milestones = sessions.filter(s=>s.milestone).length;
-  const liveTrackers = trackers.filter(t=>t.status==="live").length;
-  const allItems = layers.flatMap(l=>l.items);
-  const okItems = allItems.filter(i=>i.status==="ok").length;
-  const todayCount = sessions.filter(s=>s.date==="2026-05-17").length;
+  // Newest first; default shows the 7 most recent
+  const displayed = showAll ? milestones : milestones.slice(0, 7);
 
   return (
-    <div style={{fontFamily:"-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",background:"#0d1117",color:"#e2e8f0",minHeight:"100vh",padding:20}}>
+    <div style={{fontFamily:"-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",background:"#0d1117",color:"#e2e8f0",minHeight:"100vh",padding:"16px 20px",maxWidth:680,margin:"0 auto"}}>
+
+      {/* ── Header ── */}
       <div style={{marginBottom:24}}>
-        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:4}}>
-          <span style={{fontSize:28}}>⚡</span>
+        <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:10}}>
+          <span style={{fontSize:30}}>⚡</span>
           <div>
-            <div style={{fontSize:22,fontWeight:700,letterSpacing:"-0.5px"}}>AiMe</div>
-            <div style={{fontSize:12,color:"#64748b"}}>Personal AI Infrastructure · Build Status · 2026-05-17</div>
+            <div style={{fontSize:24,fontWeight:800,letterSpacing:'-0.5px'}}>AiMe</div>
+            <div style={{fontSize:12,color:'#475569',marginTop:1}}>Personal AI · runs on home hardware · your data never leaves your network</div>
           </div>
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:10,marginTop:14}}>
+
+        {/* Hero */}
+        <div style={{background:'linear-gradient(135deg,#0f2a1a,#0f1a30)',border:'1px solid #1a5a3a',borderRadius:10,padding:'14px 18px',marginBottom:12}}>
+          <div style={{fontSize:20,fontWeight:700,color:'#50cc80',marginBottom:3}}>≈ 5 work weeks reclaimed per year</div>
+          <div style={{fontSize:12,color:'#64748b',lineHeight:1.5}}>from 56 recurring tasks — at full deployment.<br/>~38 hrs/yr running automatically today.</div>
+        </div>
+
+        {/* Stats */}
+        <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:8}}>
           {[
-            {v:sessions.length,l:"Sessions",s:`${todayCount} shipped today`},
-            {v:milestones,l:"Milestones",s:"shipped"},
-            {v:`${okItems}/${allItems.length}`,l:"Systems OK",s:"across 4 layers"},
-            {v:`${liveTrackers}/6`,l:"Trackers Live",s:"on gateway"},
-          ].map(s=>(
-            <div key={s.l} style={{background:"#161b22",border:"1px solid #21262d",borderRadius:10,padding:"12px 14px"}}>
-              <div style={{fontSize:20,fontWeight:700}}>{s.v}</div>
-              <div style={{fontSize:11,color:"#94a3b8",marginTop:1}}>{s.l}</div>
-              <div style={{fontSize:10,color:"#475569"}}>{s.s}</div>
+            {v:'56',  l:'routines tracked',   s:'finance, health, travel'},
+            {v:'6',   l:'live dashboards',    s:'on home server'},
+            {v:'2',   l:'local AI models',    s:'on home hardware'},
+            {v:'25',  l:'build sessions',     s:'since April 2026'},
+          ].map(c=>(
+            <div key={c.l} style={{background:'#161b22',border:'1px solid #21262d',borderRadius:8,padding:'10px 12px'}}>
+              <div style={{fontSize:22,fontWeight:700}}>{c.v}</div>
+              <div style={{fontSize:10,color:'#94a3b8',marginTop:1,lineHeight:1.3}}>{c.l}</div>
+              <div style={{fontSize:9,color:'#475569',marginTop:2}}>{c.s}</div>
             </div>
           ))}
         </div>
-        <div style={{marginTop:12,background:"#0f1f40",border:"1px solid #1d4ed844",borderRadius:10,padding:"10px 14px"}}>
-          <div style={{fontSize:11,color:"#93c5fd",fontWeight:700,marginBottom:3}}>📈 Build Trajectory</div>
-          <div style={{fontSize:11,color:"#64748b",lineHeight:1.7}}>
-            <span style={{color:"#475569"}}>Phase 1 (pre-May):</span> Exploratory — ChatGPT-era infra, no naming conventions, mesh silently expired, vault offline 108 days.&nbsp;
-            <span style={{color:"#475569"}}>Phase 2 (May 3):</span> Inflection — stopped building, started designing. Master files, session ritual, data classification policy, git.&nbsp;
-            <span style={{color:"#93c5fd",fontWeight:600}}>Phase 3 (now):</span> Exponential — every session ships something. Transmission system built. First AI breaker closed.
-          </div>
-        </div>
       </div>
 
-      <div style={{display:"flex",gap:2,marginBottom:18,borderBottom:"1px solid #21262d"}}>
-        {[["layers","🏗 Layers"],["timeline","📅 Timeline"],["trackers","📊 Trackers"],["roadmap","🗺 Roadmap"]].map(([id,label])=>(
-          <button key={id} onClick={()=>setTab(id)} style={{background:"none",border:"none",borderBottom:tab===id?"2px solid #3b82f6":"2px solid transparent",color:tab===id?"#e2e8f0":"#64748b",padding:"6px 14px",cursor:"pointer",fontSize:13,fontWeight:tab===id?600:400}}>{label}</button>
+      {/* ── Tabs ── */}
+      <div style={{display:'flex',gap:1,marginBottom:18,borderBottom:'1px solid #21262d',overflowX:'auto'}}>
+        {[
+          ['benefits','⚡ What It Does'],
+          ['progress','📅 How It Was Built'],
+          ['trackers','📊 Your Trackers'],
+          ['next',    "🗺 What's Next"],
+        ].map(([id,label])=>(
+          <button key={id} onClick={()=>setTab(id)} style={{background:'none',border:'none',borderBottom:tab===id?'2px solid #3b82f6':'2px solid transparent',color:tab===id?'#e2e8f0':'#64748b',padding:'6px 14px',cursor:'pointer',fontSize:12,fontWeight:tab===id?600:400,whiteSpace:'nowrap',flexShrink:0}}>{label}</button>
         ))}
       </div>
 
-      {tab==="layers" && (
+      {/* ── What It Does ── */}
+      {tab==='benefits' && (
         <div>
-          <div style={{fontSize:11,color:"#475569",marginBottom:14,fontStyle:"italic"}}>CYME Gateway pattern: collection perimeter → control plane → analytical layer → on-demand compute</div>
-          {layers.map((layer,li)=>{
-            const open = expanded===li;
-            const counts = {ok:layer.items.filter(i=>i.status==="ok").length,warn:layer.items.filter(i=>i.status==="warn").length,todo:layer.items.filter(i=>i.status==="todo").length};
+          <div style={{fontSize:12,color:'#475569',marginBottom:14,lineHeight:1.6}}>
+            AiMe runs on personal hardware at home. Here's what it actually does, day to day.
+          </div>
+          {benefits.map((b,i)=>{
+            const isOpen = expanded===i;
+            const sc = b.status==='live'
+              ? {bg:'#0f2a1a',bd:'#1a6a30',c:'#50cc80',label:'Live'}
+              : b.status==='partial'
+              ? {bg:'#1a1505',bd:'#6a5010',c:'#c8a020',label:'Partial'}
+              : {bg:'#0d1118',bd:'#1a2a3a',c:'#4a6a8a',label:'Building'};
             return (
-              <div key={layer.name} style={{marginBottom:10,borderRadius:10,border:`1px solid ${layer.color}33`,overflow:"hidden",background:"#161b22"}}>
-                <div onClick={()=>setExpanded(open?null:li)} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"12px 16px",cursor:"pointer",borderLeft:`3px solid ${layer.color}`}}>
-                  <div style={{display:"flex",alignItems:"center",gap:10}}>
-                    <span style={{fontSize:18}}>{layer.icon}</span>
-                    <div>
-                      <div style={{fontWeight:600,fontSize:13}}>{layer.name}</div>
-                      <div style={{color:"#64748b",fontSize:11}}>{layer.analogy}</div>
+              <div key={b.title} style={{background:'#161b22',border:'1px solid #21262d',borderRadius:10,marginBottom:8,overflow:'hidden',borderLeft:`3px solid ${b.color}`}}>
+                <div onClick={()=>setExpanded(isOpen?null:i)} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'12px 16px',cursor:'pointer'}}>
+                  <div style={{display:'flex',alignItems:'center',gap:10,flex:1,minWidth:0}}>
+                    <span style={{fontSize:20,flexShrink:0}}>{b.icon}</span>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{fontWeight:600,fontSize:13,marginBottom:3}}>{b.title}</div>
+                      <div style={{display:'flex',alignItems:'center',gap:7,flexWrap:'wrap'}}>
+                        <span style={{background:sc.bg,color:sc.c,border:`1px solid ${sc.bd}`,fontSize:9,fontWeight:600,padding:'1px 6px',borderRadius:3}}>{sc.label}</span>
+                        <span style={{fontSize:11,color:b.color,fontWeight:600}}>{b.stat}</span>
+                        <span style={{fontSize:10,color:'#475569'}}>{b.statNote}</span>
+                      </div>
                     </div>
                   </div>
-                  <div style={{display:"flex",alignItems:"center",gap:10}}>
-                    <div style={{display:"flex",gap:6,fontSize:12}}>
-                      {counts.ok>0 && <span style={{color:"#22c55e"}}>✅ {counts.ok}</span>}
-                      {counts.warn>0 && <span style={{color:"#f59e0b"}}>⚠️ {counts.warn}</span>}
-                      {counts.todo>0 && <span style={{color:"#475569"}}>📋 {counts.todo}</span>}
-                    </div>
-                    <span style={{color:"#475569",fontSize:11}}>{open?"▲":"▼"}</span>
-                  </div>
+                  <span style={{color:'#475569',fontSize:11,flexShrink:0,marginLeft:8}}>{isOpen?'▲':'▼'}</span>
                 </div>
-                {open && layer.items.map(item=>(
-                  <div key={item.name} style={{display:"flex",gap:10,padding:"9px 16px",borderTop:"1px solid #21262d"}}>
-                    <span style={{fontSize:13,minWidth:18,paddingTop:1}}>{statusLabel[item.status]}</span>
-                    <div>
-                      <div style={{fontSize:13,fontWeight:500}}>{item.name}</div>
-                      <div style={{fontSize:11,color:"#64748b",lineHeight:1.5}}>{item.note}</div>
-                    </div>
+                {isOpen && (
+                  <div style={{borderTop:'1px solid #21262d',padding:'10px 16px 13px'}}>
+                    {b.live && (
+                      <div style={{background:'#0a1520',border:'1px solid #1a3a5a',borderRadius:4,padding:'6px 10px',marginBottom:10,fontSize:10,color:'#5aabf5'}}>
+                        ⚡ {b.live}
+                      </div>
+                    )}
+                    {b.points.map((pt,j)=>(
+                      <div key={j} style={{display:'flex',gap:8,marginBottom:6}}>
+                        <span style={{color:b.color,flexShrink:0,marginTop:2,fontSize:11}}>·</span>
+                        <span style={{fontSize:12,color:'#94a3b8',lineHeight:1.55}}>{pt}</span>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                )}
               </div>
             );
           })}
-          <div style={{marginTop:14,background:"#161b22",borderRadius:10,padding:14,border:"1px solid #21262d"}}>
-            <div style={{fontWeight:700,fontSize:12,marginBottom:10,color:"#94a3b8"}}>Remaining Gaps — Priority Order</div>
-            {[
-              ["🟡","Directory rename","relay at /opt/personal-os/, gateway/compute not started — all /opt/local-ai/ references are stale"],
-              ["⚠️","Kasa ghost rows","2 stale CSV files on relay — 2-min cleanup, just hasn't happened yet"],
-              ["📋","Session C not built","iMessage Gateway design done, build unblocked — next capability jump"],
-              ["📋","Inventory rescans stale","Nov 2025 data; per-host rescans queued"],
-              ["📋","Compute sleep/wake","outlet order wrong, hibernation wait not implemented — testing pending"],
-            ].map(([tag,title,desc])=>(
-              <div key={title} style={{display:"flex",gap:10,marginBottom:8}}>
-                <span style={{fontSize:13,minWidth:20,paddingTop:1}}>{tag}</span>
-                <div>
-                  <div style={{fontSize:12,fontWeight:600}}>{title}</div>
-                  <div style={{fontSize:11,color:"#64748b"}}>{desc}</div>
-                </div>
-              </div>
-            ))}
+          <div style={{marginTop:14,background:'#161b22',border:'1px solid #21262d',borderRadius:8,padding:'12px 16px',fontSize:11,color:'#64748b',lineHeight:1.7}}>
+            <span style={{color:'#475569',fontWeight:600}}>How it works: </span>
+            A private network (Tailscale) connects 5 home machines. The always-on MacBook Air handles routing, dashboards, and lightweight AI. A 32GB MacBook Pro handles heavier AI on demand. AI inference runs on local hardware — DeepSeek R1, not a cloud subscription. Personal data never routes through anyone else's servers.
           </div>
         </div>
       )}
 
-      {tab==="timeline" && (
+      {/* ── How It Was Built ── */}
+      {tab==='progress' && (
         <div>
-          <div style={{fontSize:11,color:"#475569",marginBottom:14}}>⭐ = milestone · {sessions.length} sessions total · {todayCount} shipped today</div>
-          {sessions.map((s,i)=>{
-            const tc = typeColors[s.type]||typeColors.OPS;
-            const isToday = s.date==="2026-05-17";
-            return (
-              <div key={i} style={{display:"flex",gap:12,marginBottom:4}}>
-                <div style={{display:"flex",flexDirection:"column",alignItems:"center",minWidth:14,paddingTop:4}}>
-                  <div style={{width:10,height:10,borderRadius:"50%",background:s.milestone?"#f59e0b":isToday?"#3b82f6":"#21262d",border:`2px solid ${s.milestone?"#fbbf24":isToday?"#60a5fa":"#475569"}`,flexShrink:0}}/>
-                  {i<sessions.length-1 && <div style={{width:1,background:"#21262d",flex:1,marginTop:3}}/>}
-                </div>
-                <div style={{flex:1,background:"#161b22",borderRadius:8,padding:"10px 13px",marginBottom:6,border:s.milestone?"1px solid #f59e0b33":isToday?"1px solid #1d4ed844":"1px solid #21262d"}}>
-                  <div style={{display:"flex",flexWrap:"wrap",alignItems:"center",gap:7,marginBottom:5}}>
-                    <span style={{background:tc.bg,color:tc.text,border:`1px solid ${tc.border}`,fontSize:10,fontWeight:600,padding:"1px 7px",borderRadius:4}}>{s.type}</span>
-                    <span style={{color:"#475569",fontSize:11}}>{s.date}</span>
-                    {s.milestone && <span style={{color:"#f59e0b",fontSize:10,fontWeight:600}}>⭐ milestone</span>}
-                    {isToday && !s.milestone && <span style={{color:"#60a5fa",fontSize:10}}>today</span>}
-                  </div>
-                  <div style={{fontSize:13,fontWeight:600,marginBottom:3}}>{s.title}</div>
-                  <div style={{fontSize:11,color:"#64748b",lineHeight:1.5}}>{s.summary}</div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10}}>
+            <div style={{fontSize:11,color:'#475569'}}>{milestones.length} milestones · 25 build sessions</div>
+            <button onClick={()=>setShowAll(!showAll)} style={{background:'none',border:'1px solid #21262d',color:'#64748b',padding:'3px 9px',borderRadius:4,cursor:'pointer',fontSize:10,fontFamily:'inherit'}}>
+              {showAll ? 'Show recent' : `All ${milestones.length}`}
+            </button>
+          </div>
 
-      {tab==="trackers" && (
-        <div>
-          <div style={{fontSize:11,color:"#475569",marginBottom:14}}>All trackers served by gateway over private Tailscale mesh · {liveTrackers}/6 fully live</div>
-          {trackers.map(t=>{
-            const s = t.status==="live"
-              ? {bg:"#0f2a1a",border:"#16a34a",text:"#86efac",label:"LIVE"}
-              : {bg:"#2a1a08",border:"#d97706",text:"#fcd34d",label:"PARTIAL"};
-            return (
-              <div key={t.name} style={{background:"#161b22",borderRadius:9,padding:"13px 16px",marginBottom:9,border:"1px solid #21262d"}}>
-                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:4}}>
-                  <div style={{display:"flex",alignItems:"center",gap:8}}>
-                    <span style={{background:s.bg,color:s.text,border:`1px solid ${s.border}`,fontSize:10,fontWeight:600,padding:"1px 7px",borderRadius:4}}>{s.label}</span>
-                    <span style={{fontWeight:600,fontSize:14}}>{t.name}</span>
-                  </div>
-                  <code style={{fontSize:11,color:"#475569"}}>{t.url}</code>
-                </div>
-                <div style={{fontSize:11,color:"#64748b"}}>{t.note}</div>
-              </div>
-            );
-          })}
-          <div style={{marginTop:16,background:"#161b22",borderRadius:10,padding:14,border:"1px solid #21262d"}}>
-            <div style={{fontWeight:700,fontSize:12,marginBottom:10,color:"#94a3b8"}}>Automation vs AI — Honest Breakdown</div>
-            <div style={{marginBottom:10}}>
-              <div style={{fontSize:11,color:"#64748b",marginBottom:6}}><span style={{color:"#22c55e",fontWeight:600}}>1 live AI component</span> — iMessage PoC: message in → Mistral 7B reasons → reply out. No external APIs. No data off-mesh.</div>
-              <div style={{fontSize:11,color:"#64748b"}}><span style={{color:"#f59e0b",fontWeight:600}}>~15 automation components live</span> — deterministic scripts and schedulers with no model reasoning: expiry alerts, diagnostics, maintenance loop, Kasa telemetry, all 6 trackers, sync-to-git, git commit UI.</div>
+          {/* Build arc — 3 phases on separate lines */}
+          <div style={{background:'#0f1f40',border:'1px solid #1d4ed844',borderRadius:8,padding:'12px 14px',marginBottom:14,fontSize:11,lineHeight:1.8}}>
+            <div style={{color:'#93c5fd',fontWeight:700,marginBottom:8}}>📈 The arc</div>
+            <div style={{marginBottom:6}}>
+              <span style={{color:'#8a9ab8',fontWeight:600}}>Phase 1 — ChatGPT era:</span>
+              <span style={{color:'#64748b'}}> A year of learning by doing. Scripts scattered everywhere, nothing documented, sessions started from scratch every time. Useful individual outputs, but nothing survived a context reset.</span>
             </div>
-            <div style={{fontSize:11,color:"#475569",borderTop:"1px solid #21262d",paddingTop:8}}>Session C (iMessage Gateway) is the next real AI leap. The transmission system is built — Session C closes the first production breaker.</div>
+            <div style={{marginBottom:6}}>
+              <span style={{color:'#8a9ab8',fontWeight:600}}>Phase 2 — Regrouped with Claude:</span>
+              <span style={{color:'#64748b'}}> Stopped building randomly, started designing. Master files, session ritual, git versioning, data classification policy. Every session now survives a context window reset. Documentation and architecture first.</span>
+            </div>
+            <div>
+              <span style={{color:'#93c5fd',fontWeight:600}}>Phase 3 (now) — Building fast:</span>
+              <span style={{color:'#64748b'}}> Pieces snapping into place. Every session ships something, and each build adds to a system that remembers itself.</span>
+            </div>
           </div>
+
+          {displayed.map((s,i)=>(
+            <div key={i} style={{display:'flex',gap:12,marginBottom:4}}>
+              <div style={{display:'flex',flexDirection:'column',alignItems:'center',minWidth:16,paddingTop:6}}>
+                <div style={{width:12,height:12,borderRadius:'50%',background:'#f59e0b',border:'2px solid #fbbf24',flexShrink:0}}/>
+                {i<displayed.length-1 && <div style={{width:1,background:'#21262d',flex:1,marginTop:3}}/>}
+              </div>
+              <div style={{flex:1,background:'#161b22',borderRadius:8,padding:'10px 13px',marginBottom:6,border:'1px solid #f59e0b33'}}>
+                <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:5}}>
+                  <span style={{fontSize:16}}>{s.icon}</span>
+                  <span style={{color:'#475569',fontSize:10}}>{s.date}</span>
+                </div>
+                <div style={{fontSize:13,fontWeight:600,marginBottom:3}}>{s.title}</div>
+                <div style={{fontSize:11,color:'#64748b',lineHeight:1.5}}>{s.summary}</div>
+              </div>
+            </div>
+          ))}
+
+          {!showAll && milestones.length > 7 && (
+            <div style={{textAlign:'center',marginTop:6}}>
+              <button onClick={()=>setShowAll(true)} style={{background:'none',border:'1px solid #21262d',color:'#64748b',padding:'6px 16px',borderRadius:4,cursor:'pointer',fontSize:11,fontFamily:'inherit'}}>
+                + {milestones.length - 7} older milestones
+              </button>
+            </div>
+          )}
         </div>
       )}
 
-      {tab==="roadmap" && (
+      {/* ── Your Trackers ── */}
+      {tab==='trackers' && (
         <div>
-          <div style={{fontSize:11,color:"#475569",marginBottom:14}}>Phase framework — where AiMe is and where it's going</div>
-          {roadmap.map(r=>{
-            const cfg = r.status==="complete"
-              ? {bg:"#0f2a1a",border:"#16a34a",badge:"#86efac",label:"✅ Complete"}
-              : r.status==="current"
-              ? {bg:"#0f1f40",border:"#3b82f6",badge:"#93c5fd",label:"🔧 In progress"}
-              : r.status==="upcoming"
-              ? {bg:"#1e1040",border:"#7c3aed",badge:"#c4b5fd",label:"⬜ Upcoming"}
-              : {bg:"#161b22",border:"#21262d",badge:"#475569",label:"⬜ Future"};
+          <div style={{fontSize:11,color:'#475569',marginBottom:10}}>
+            6 live dashboards on the home server · accessible from anywhere on the private mesh
+          </div>
+
+          <div style={{background:'#0f1a30',border:'1px solid #1d3a6a',borderRadius:8,padding:'12px 16px',marginBottom:14,fontSize:11,color:'#64748b',lineHeight:1.6}}>
+            <span style={{color:'#3a7bd5',fontWeight:600}}>🔔 Notifications: </span>
+            Installed trackers actively monitor for expiry dates, maintenance thresholds, and action-needed triggers — not just display. Rewards expiry alerts fire daily at 7am, tiered by urgency. Car maintenance flags overdue items at key milestones. As each planned tracker is built, it adds its own alert channel to the same pipeline.
+          </div>
+
+          {/* Live / partial */}
+          {trackers.filter(t => t.status !== 'wishlist').map(t=>{
+            const cfg = t.status==='live'
+              ? {bg:'#0f2a1a',bd:'#16a34a',c:'#86efac',label:'Live'}
+              : {bg:'#1a1505',bd:'#d97706',c:'#fcd34d',label:'Partial'};
             return (
-              <div key={r.phase} style={{background:cfg.bg,border:`1px solid ${cfg.border}44`,borderLeft:`3px solid ${r.color}`,borderRadius:10,padding:"14px 16px",marginBottom:12}}>
-                <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:6}}>
-                  <span style={{background:"#0d1117",color:r.color,border:`1px solid ${r.color}44`,fontSize:11,fontWeight:700,padding:"2px 9px",borderRadius:4}}>Phase {r.phase}</span>
-                  <span style={{fontWeight:700,fontSize:14}}>{r.name}</span>
-                  <span style={{color:cfg.badge,fontSize:11,marginLeft:"auto"}}>{cfg.label}</span>
+              <div key={t.name} style={{background:'#161b22',borderRadius:8,padding:'13px 16px',marginBottom:8,border:'1px solid #21262d'}}>
+                <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:12}}>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:4}}>
+                      <span style={{background:cfg.bg,color:cfg.c,border:`1px solid ${cfg.bd}`,fontSize:9,fontWeight:600,padding:'1px 6px',borderRadius:3,flexShrink:0}}>{cfg.label}</span>
+                      <span style={{fontWeight:600,fontSize:13}}>{t.name}</span>
+                    </div>
+                    <div style={{fontSize:11,color:'#64748b',lineHeight:1.5,marginBottom:4}}>{t.why}</div>
+                    <div style={{fontSize:10,color:'#475569'}}>{t.metric}</div>
+                  </div>
+                  {t.url && <code style={{fontSize:10,color:'#334155',flexShrink:0,marginTop:2}}>{t.url}</code>}
                 </div>
-                <div style={{fontSize:12,color:"#94a3b8",marginBottom:10,lineHeight:1.5}}>{r.summary}</div>
-                <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
+              </div>
+            );
+          })}
+
+          {/* Wishlist separator */}
+          <div style={{display:'flex',alignItems:'center',gap:10,margin:'14px 0 10px'}}>
+            <div style={{flex:1,height:1,background:'#1e2a3a'}}/>
+            <span style={{fontSize:9,color:'#334155',letterSpacing:'2px',textTransform:'uppercase',whiteSpace:'nowrap'}}>Planned — wishlist</span>
+            <div style={{flex:1,height:1,background:'#1e2a3a'}}/>
+          </div>
+
+          {/* Wishlist items — faded */}
+          {trackers.filter(t => t.status === 'wishlist').map(t=>(
+            <div key={t.name} style={{background:'#0f1117',borderRadius:8,padding:'11px 14px',marginBottom:6,border:'1px solid #1a2030',opacity:0.7}}>
+              <div style={{display:'flex',alignItems:'flex-start',gap:10}}>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:3}}>
+                    <span style={{background:'#0d1117',color:'#334155',border:'1px solid #1e2a3a',fontSize:9,fontWeight:600,padding:'1px 6px',borderRadius:3,flexShrink:0}}>📋 Planned</span>
+                    <span style={{fontWeight:600,fontSize:12,color:'#5a7090'}}>{t.name}</span>
+                  </div>
+                  <div style={{fontSize:10,color:'#475569',lineHeight:1.5,marginBottom:t.metric?3:0}}>{t.why}</div>
+                  {t.metric && <div style={{fontSize:9,color:'#334155'}}>{t.metric}</div>}
+                </div>
+              </div>
+            </div>
+          ))}
+
+          </div>
+      )}
+
+      {/* ── What's Next ── */}
+      {tab==='next' && (
+        <div>
+          <div style={{fontSize:11,color:'#475569',marginBottom:14}}>4 phases from connected hardware to full personal AI — currently in Phase 1</div>
+          {roadmap.map(r=>{
+            const cfg = r.status==='done'
+              ? {bg:'#0f2a1a',bd:'#16a34a',badge:'#86efac',label:'✅ Complete'}
+              : r.status==='current'
+              ? {bg:'#0f1f40',bd:'#3b82f6',badge:'#93c5fd',label:'🔧 In progress'}
+              : r.status==='upcoming'
+              ? {bg:'#1e1040',bd:'#7c3aed',badge:'#c4b5fd',label:'⬜ Next'}
+              : {bg:'#161b22',bd:'#21262d',badge:'#475569',label:'⬜ Future'};
+            return (
+              <div key={r.phase} style={{background:cfg.bg,border:`1px solid ${cfg.bd}44`,borderLeft:`3px solid ${r.color}`,borderRadius:10,padding:'14px 16px',marginBottom:12}}>
+                <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:6,flexWrap:'wrap'}}>
+                  <span style={{fontSize:18}}>{r.icon}</span>
+                  <span style={{background:'#0d1117',color:r.color,border:`1px solid ${r.color}44`,fontSize:10,fontWeight:700,padding:'2px 8px',borderRadius:4}}>Phase {r.phase}</span>
+                  <span style={{fontWeight:700,fontSize:14}}>{r.name}</span>
+                  <span style={{color:cfg.badge,fontSize:11,marginLeft:'auto'}}>{cfg.label}</span>
+                </div>
+                <div style={{fontSize:13,color:'#e2e8f0',fontWeight:600,marginBottom:5}}>{r.headline}</div>
+                <div style={{fontSize:11,color:'#94a3b8',marginBottom:10,lineHeight:1.55}}>{r.what}</div>
+                <div style={{display:'flex',flexWrap:'wrap',gap:5}}>
                   {r.items.map(item=>(
-                    <span key={item} style={{background:"#0d1117",border:`1px solid ${r.color}33`,color:"#94a3b8",fontSize:11,padding:"3px 9px",borderRadius:4}}>{item}</span>
+                    <span key={item} style={{background:'#0d1117',border:`1px solid ${r.color}33`,color:'#94a3b8',fontSize:10,padding:'3px 8px',borderRadius:4}}>{item}</span>
                   ))}
                 </div>
               </div>
             );
           })}
-          <div style={{marginTop:8,background:"#161b22",borderRadius:10,padding:14,border:"1px solid #21262d"}}>
-            <div style={{fontWeight:700,fontSize:12,marginBottom:8,color:"#94a3b8"}}>About this dashboard</div>
-            <div style={{fontSize:11,color:"#64748b",lineHeight:1.6}}>
-              This is the live build status of AiMe — a local AI infrastructure project running on personal hardware. Trackers and dashboards run on a private mesh and are not publicly accessible, but the architecture and documentation are open source.<br/><br/>
-              <a href="https://github.com/tandrew101/a-i-me" style={{color:"#3b82f6",textDecoration:"none"}}>github.com/tandrew101/a-i-me</a>
-            </div>
+          <div style={{marginTop:8,background:'#161b22',border:'1px solid #21262d',borderRadius:8,padding:'12px 16px',fontSize:11,color:'#64748b',lineHeight:1.6}}>
+            <div style={{fontWeight:600,color:'#94a3b8',marginBottom:5}}>About this project</div>
+            AiMe is a personal AI infrastructure project — a network of home computers that collectively act as a local assistant. Open source. No cloud subscription required. Built by one person, a few hours at a time.{' '}
+            <a href="https://github.com/tandrew101/a-i-me" style={{color:'#3b82f6',textDecoration:'none'}}>github.com/tandrew101/a-i-me</a>
           </div>
         </div>
       )}
+
     </div>
   );
 }
