@@ -173,6 +173,8 @@ Every state-changing command is flagged explicitly, confirmed before execution, 
 
 ## How It Works
 
+![AiMe mesh network](assets/diagrams/aime_mesh_network_v3.svg)
+
 ### The Node Mesh
 
 Tailscale (a WireGuard-based encrypted mesh VPN) connects all devices under a single private network accessible from anywhere. Every node is reachable by hostname from every other node regardless of physical location or ISP.
@@ -185,7 +187,7 @@ Tailscale (a WireGuard-based encrypted mesh VPN) connects all devices under a si
 | `vault` | Galaxy Book (Windows) | ✅ | ~5W | MS Money, LlamaIndex RAG pipeline, Windows-native runtime |
 | `viewer` | MacBook Air M3 | ❌ Travel | ~3–8W | Travel thin client — DeepSeek R1 14B via Ollama, fully offline AI fallback |
 
-*† Idle draw figures are estimates based on published hardware specs. Measured values from Kasa smart plug telemetry will replace these once the energy monitoring dashboard is complete.*
+*† Measured via Kasa smart plug telemetry (2026-05-24): always-on infrastructure (relay + gateway + vault) draws **~12W combined** — roughly the same as a dim light bulb, ~$15/year in electricity at US average rates. Compute docks add ~17W idle / ~75W active when the inference node is running. On-demand compute, not 24/7.*
 
 **relay** deserves its name twice over: it is a protective relay in the power systems sense (operates independently of the system it protects) and a traffic relay (exit node, subnet router, Kasa bridge). If the gateway hangs, relay cycles its power outlet. If relay itself hangs, its own hardware watchdog reboots it autonomously. The rest of the system can fail completely; relay brings it back.
 
@@ -297,6 +299,8 @@ The infrastructure is built and running. The RAG pipeline and full AI triage lay
 - **Rewards and credits tracker** — live, updated daily
 - **Car maintenance dashboards** — Audi A4 and Lexus ES300
 - **5/3/1 training dashboard** — 25+ cycles (2019–2026), AMRAP tracking, TM progression
+- **Recovery dashboard** — Oura API auto-pull at 8am daily; HRV, sleep efficiency, readiness score; Apple Watch shortcut as manual fallback; 14-day history strip with calendar month view
+- **Photo map** — GPS extraction from photos and videos; thumbnail pipeline; searchable map by location and album; local only, nothing sent externally
 
 **AI & Inference**
 - Fully offline AI fallback on travel node (DeepSeek R1 14B, M3 Metal-accelerated)
@@ -304,12 +308,12 @@ The infrastructure is built and running. The RAG pipeline and full AI triage lay
 
 **Developer Tools**
 - **Git commit UI** — iCloud↔gateway sync with diff preview and one-click commit
+- **Automated patch system** — batch Find/Replace edits applied to master files via CLI or browser API; eliminates manual copy-paste for document updates; diff verifier tab catches errors before commit
 
 **What is being built next:**
 - **RAG pipeline** — LlamaIndex over email, financial records, health data, calendar (Session D)
 - **iMessage triage layer** — full routing to scripts, tracker queries, confirm→execute loop (Session C)
 - **Automated statement import** — OFX/QFX download → MS Money pipeline
-- **Recovery scoring dashboard** — Oura API auto-pull, unified daily score from multiple devices
 - **Mac Mini M5 Pro** — primary always-on inference node, August 2026
 
 ---
@@ -353,4 +357,4 @@ One honest caveat: this isn't plug-and-play. It took real time, real decisions, 
 
 ---
 
-*Last updated: 2026-05-17 1545 ET*
+*Last updated: 2026-05-24 1530 ET*

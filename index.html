@@ -16,6 +16,27 @@ const {useState} = React;
 
 // Newest first
 const milestones = [
+  {date:"2026-05-24", icon:"🌐",
+   title:"Public status page + real-time API sprint",
+   summary:"Designed a dedicated public namespace for AiMe's status page with six new real-time API endpoints: live Kasa power draw, AI model status, Zyxel network flags, OS versions, and notification history. A Working Tools tab shows live system activity. Cloudflare Tunnel deployment is next."},
+  {date:"2026-05-23", icon:"📸",
+   title:"Photo map with GPS tagging",
+   summary:"Ingestion pipeline for photos and videos: GPS extraction, thumbnail generation, searchable map by location and album. All processing runs on home hardware — nothing sent externally. The first step toward local photo intelligence."},
+  {date:"2026-05-23", icon:"🏠",
+   title:"Use-mode portal + router monitoring",
+   summary:"Daily-use landing page: quick links, GTD capture, one-glance system status. Zyxel router syslog now streaming to gateway — network events, WiFi changes, and device connections logged and searchable locally. No cloud involved."},
+  {date:"2026-05-22", icon:"😴",
+   title:"Compute sleep/wake automation",
+   summary:"Hibernation-safe shutdown sequence for the compute node: smart outlet coordination, Time Machine sync check, Wake-on-LAN from the Raspberry Pi over the mesh. No physical access needed to wake or sleep the inference laptop remotely."},
+  {date:"2026-05-22", icon:"🔧",
+   title:"Diagnostics overhaul + automated patching",
+   summary:"Diagnostics agent upgraded: CPU, memory, and uptime for all 4 nodes with a 5-minute watchdog. Automated patch applicator deployed — batch Find/Replace edits applied to master files via CLI, no manual copy-paste. Diff verifier tab catches mistakes before they commit."},
+  {date:"2026-05-20", icon:"🃏",
+   title:"Statement automation + Kindle kiosk",
+   summary:"Chase bank statement → MS Money: download, convert, import — fully scripted. Kindle Fire kiosk portal deployed: touch-optimized dark HMI with live outlet controls, node status, and service health readable from the desk."},
+  {date:"2026-05-19", icon:"💗",
+   title:"Recovery scoring + Oura integration",
+   summary:"Daily recovery dashboard: HRV, sleep efficiency, readiness score, 7-day rolling debt. Oura ring API auto-pull at 8am every morning. Apple Watch shortcut as manual fallback when the ring isn't worn. First health data pipeline running fully automatically."},
   {date:"2026-05-17", icon:"🚀",
    title:"Public site + savings dashboard live",
    summary:"a-i-me.com live on GitHub Pages. Routine savings dashboard shows ~5 work weeks reclaimed per year across 56 tracked tasks. 28 rewards programs and 18 travel credits loaded."},
@@ -122,6 +143,21 @@ const benefits = [
     ],
   },
   {
+    icon:'💗',
+    title:'Recovery scoring — Oura + Apple Watch',
+    color:'#e05580',
+    status:'live',
+    stat:'Daily auto-pull',
+    statNote:'8am every morning',
+    live:'HRV · sleep efficiency · readiness · 7-day rolling debt',
+    points:[
+      'Oura ring API auto-pull at 8am — HRV, sleep duration, efficiency, readiness score',
+      'Apple Watch shortcut as manual fallback when the ring isn\'t worn',
+      '14-day history strip + calendar month view; 7-day rolling debt tracks cumulative fatigue',
+      'No third-party app or subscription — raw API to local server, data stays on the mesh',
+    ],
+  },
+  {
     icon:'🤖',
     title:'Ask questions — get answers from your own data',
     color:'#3a7bd5',
@@ -172,10 +208,16 @@ const trackers = [
   {name:'Trackers Portal',     url:'/gateway/trackers/', status:'live',
    why:'Hub for all dashboards with live expiry summary on load.',
    metric:'All trackers in one place'},
+  {name:'Recovery Dashboard',  url:'/gateway/recovery/', status:'live',
+   why:'Daily recovery score from Oura ring + Apple Watch: HRV, sleep efficiency, readiness, 7-day rolling debt. Oura API auto-pull at 8am. 14-day history strip with calendar month view.',
+   metric:'Phase 2b live · Oura + Watch · daily auto-ingest'},
+  {name:'Photo Map',           url:'/gateway/photo/',    status:'partial',
+   why:'GPS extraction from photos and videos, thumbnail pipeline, searchable map by location and album. Hidden filter for private content. Phase 2: breadcrumb trail overlay planned.',
+   metric:'Live · HEIC/JPEG/RAW/MOV supported'},
+  {name:'Browser History',     url:'/gateway/browser-capture/', status:'partial',
+   why:'Intentional tab captures via bookmarklet + Firefox SQLite history reader. T1 data — stays local, never leaves the mesh.',
+   metric:'Live · local only · T1 data'},
   // ── Wishlist ──
-  {name:'Recovery Dashboard',  url:'', status:'wishlist',
-   why:'Oura Ring + Apple Watch unified recovery score. Daily log: HRV, sleep quality, readiness. Phase 1 manual tap input; Phase 2 Oura API auto-pull.',
-   metric:'Gate: Oura API pipeline'},
   {name:'Consumables Tracker', url:'', status:'wishlist',
    why:'Track replacement dates and reorder timing for household consumables — toothbrush heads, batteries, subscriptions. Alert when due.',
    metric:''},
@@ -201,11 +243,11 @@ const roadmap = [
   {phase:1, icon:'⚡', name:'First Automations', status:'current', color:'#3b82f6',
    headline:'The first loops are running. Things fire automatically.',
    what:'Individual automations proven and deployed: alerts, monitors, dashboards. This is where AiMe starts saving time every day.',
-   items:['Daily reward expiry alerts (7am)','Daily system health check (6am)','Monthly maintenance automation','6 live dashboards','iMessage AI — text a question, get a local answer','Routine time savings tracker']},
+   items:['Daily reward expiry alerts (7am)','Daily system health check (6am)','Monthly maintenance automation','12 live dashboards and tools','iMessage AI — text a question, get a local answer','Recovery scoring (Oura + Apple Watch) — live']},
   {phase:2, icon:'🧠', name:'Connected Intelligence', status:'upcoming', color:'#8b5cf6',
    headline:'Ask questions about your own life. Get smart, local answers.',
    what:'Pipelines connected end-to-end. Ask AiMe about your finances, health, travel, or calendar and get an answer from your own data — without touching a cloud service.',
-   items:['Search over email + financial records','Full iMessage conversational interface','MS Money automated catch-up','Recovery scoring (Oura + Apple Watch)','Mac Mini M5 Pro — always-on inference (Aug 2026)']},
+   items:['Search over email + financial records','Full iMessage conversational interface','MS Money automated catch-up','Public status via Cloudflare Tunnel (in progress)','Mac Mini M5 Pro — always-on inference (Aug 2026)']},
   {phase:3, icon:'✨', name:'Proactive Intelligence', status:'future', color:'#f59e0b',
    headline:'AiMe acts before you have to think about it.',
    what:'The system watches patterns and surfaces things proactively — not because it\'s scheduled, but because context makes it relevant right now.',
@@ -217,7 +259,6 @@ function AiMeStatus() {
   const [expanded, setExpanded] = useState(null);
   const [showAll, setShowAll]   = useState(false);
 
-  // Newest first; default shows the 7 most recent
   const displayed = showAll ? milestones : milestones.slice(0, 7);
 
   return (
@@ -243,9 +284,9 @@ function AiMeStatus() {
         <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:8}}>
           {[
             {v:'56',  l:'routines tracked',   s:'finance, health, travel'},
-            {v:'6',   l:'live dashboards',    s:'on home server'},
-            {v:'2',   l:'local AI models',    s:'on home hardware'},
-            {v:'25',  l:'build sessions',     s:'since April 2026'},
+            {v:'12',  l:'live dashboards',    s:'on home server'},
+            {v:'3',   l:'local AI models',    s:'no cloud, no subscriptions'},
+            {v:'~40', l:'build sessions',     s:'since April 2026'},
           ].map(c=>(
             <div key={c.l} style={{background:'#161b22',border:'1px solid #21262d',borderRadius:8,padding:'10px 12px'}}>
               <div style={{fontSize:22,fontWeight:700}}>{c.v}</div>
@@ -261,7 +302,7 @@ function AiMeStatus() {
         {[
           ['benefits','⚡ What It Does'],
           ['progress','📅 How It Was Built'],
-          ['trackers','📊 Your Trackers'],
+          ['trackers','📊 Apps'],
           ['next',    "🗺 What's Next"],
         ].map(([id,label])=>(
           <button key={id} onClick={()=>setTab(id)} style={{background:'none',border:'none',borderBottom:tab===id?'2px solid #3b82f6':'2px solid transparent',color:tab===id?'#e2e8f0':'#64748b',padding:'6px 14px',cursor:'pointer',fontSize:12,fontWeight:tab===id?600:400,whiteSpace:'nowrap',flexShrink:0}}>{label}</button>
@@ -326,13 +367,13 @@ function AiMeStatus() {
       {tab==='progress' && (
         <div>
           <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10}}>
-            <div style={{fontSize:11,color:'#475569'}}>{milestones.length} milestones · 25 build sessions</div>
+            <div style={{fontSize:11,color:'#475569'}}>{milestones.length} milestones · ~40 build sessions</div>
             <button onClick={()=>setShowAll(!showAll)} style={{background:'none',border:'1px solid #21262d',color:'#64748b',padding:'3px 9px',borderRadius:4,cursor:'pointer',fontSize:10,fontFamily:'inherit'}}>
               {showAll ? 'Show recent' : `All ${milestones.length}`}
             </button>
           </div>
 
-          {/* Build arc — 3 phases on separate lines */}
+          {/* Build arc */}
           <div style={{background:'#0f1f40',border:'1px solid #1d4ed844',borderRadius:8,padding:'12px 14px',marginBottom:14,fontSize:11,lineHeight:1.8}}>
             <div style={{color:'#93c5fd',fontWeight:700,marginBottom:8}}>📈 The arc</div>
             <div style={{marginBottom:6}}>
@@ -380,12 +421,12 @@ function AiMeStatus() {
       {tab==='trackers' && (
         <div>
           <div style={{fontSize:11,color:'#475569',marginBottom:10}}>
-            6 live dashboards on the home server · accessible from anywhere on the private mesh
+          12 live dashboards and tools on the home server · accessible from anywhere on the private mesh
           </div>
 
           <div style={{background:'#0f1a30',border:'1px solid #1d3a6a',borderRadius:8,padding:'12px 16px',marginBottom:14,fontSize:11,color:'#64748b',lineHeight:1.6}}>
             <span style={{color:'#3a7bd5',fontWeight:600}}>🔔 Notifications: </span>
-            Installed trackers actively monitor for expiry dates, maintenance thresholds, and action-needed triggers — not just display. Rewards expiry alerts fire daily at 7am, tiered by urgency. Car maintenance flags overdue items at key milestones. As each planned tracker is built, it adds its own alert channel to the same pipeline.
+            Installed trackers actively monitor for expiry dates, maintenance thresholds, and action-needed triggers — not just display. Rewards expiry alerts fire daily at 7am, tiered by urgency. Car maintenance flags overdue items at key milestones. Recovery scoring runs at 8am automatically from Oura ring data.
           </div>
 
           {/* Live / partial */}
@@ -417,7 +458,6 @@ function AiMeStatus() {
             <div style={{flex:1,height:1,background:'#1e2a3a'}}/>
           </div>
 
-          {/* Wishlist items — faded */}
           {trackers.filter(t => t.status === 'wishlist').map(t=>(
             <div key={t.name} style={{background:'#0f1117',borderRadius:8,padding:'11px 14px',marginBottom:6,border:'1px solid #1a2030',opacity:0.7}}>
               <div style={{display:'flex',alignItems:'flex-start',gap:10}}>
@@ -432,8 +472,7 @@ function AiMeStatus() {
               </div>
             </div>
           ))}
-
-          </div>
+        </div>
       )}
 
       {/* ── What's Next ── */}
@@ -466,13 +505,14 @@ function AiMeStatus() {
               </div>
             );
           })}
-          <div style={{marginTop:8,background:'#161b22',border:'1px solid #21262d',borderRadius:8,padding:'12px 16px',fontSize:11,color:'#64748b',lineHeight:1.6}}>
-            <div style={{fontWeight:600,color:'#94a3b8',marginBottom:5}}>About this project</div>
-            AiMe is a personal AI infrastructure project — a network of home computers that collectively act as a local assistant. Open source. No cloud subscription required. Built by one person, a few hours at a time.{' '}
-            <a href="https://github.com/tandrew101/a-i-me" style={{color:'#3b82f6',textDecoration:'none'}}>github.com/tandrew101/a-i-me</a>
-          </div>
         </div>
       )}
+
+      {/* ── Persistent footer ── */}
+      <div style={{marginTop:20,paddingTop:16,borderTop:'1px solid #21262d',fontSize:11,color:'#64748b',lineHeight:1.6,display:'flex',flexWrap:'wrap',alignItems:'baseline',justifyContent:'space-between',gap:6}}>
+        <span><span style={{fontWeight:600,color:'#94a3b8'}}>AiMe</span> — personal AI infrastructure. Open source. No cloud subscription. Built by one person, a few hours at a time.</span>
+        <a href="https://github.com/tandrew101/a-i-me" style={{color:'#3b82f6',textDecoration:'none',whiteSpace:'nowrap'}}>github.com/tandrew101/a-i-me</a>
+      </div>
 
     </div>
   );
@@ -480,5 +520,7 @@ function AiMeStatus() {
 
 ReactDOM.createRoot(document.getElementById('root')).render(<AiMeStatus />);
 </script>
+<div id="page-ts" style="text-align:right;font-size:10px;color:#475569;font-family:monospace;padding:4px 12px;opacity:0.6"></div>
+<script>fetch(window.location.href,{method:'HEAD'}).then(r=>{var lm=r.headers.get('Last-Modified');if(lm)document.getElementById('page-ts').textContent='Deployed: '+new Date(lm).toLocaleString();}).catch(function(){});</script>
 </body>
 </html>
