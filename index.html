@@ -14,71 +14,97 @@
 <script type="text/babel">
 const {useState} = React;
 
-// Newest first
 const milestones = [
+  {date:"2026-05-31", icon:"📖",
+   title:"Public launch — README, principles, and publishing pass",
+   summary:"Complete public documentation written: plain-English README covering the why and how, a PRINCIPLES.md capturing the beliefs behind every design decision, and a full publishing pass updating all public-facing files to reflect current state. First time the system is fully legible to someone who didn't build it."},
+  {date:"2026-05-30", icon:"🧠",
+   title:"AI reasoning pipeline designed and ready to build",
+   summary:"Full design locked for the AI reasoning layer: how personal documents get indexed, how questions get answered, and how the system defends against bad inputs. A working proof of concept validated the approach on real data. The pipeline is ready to build."},
+  {date:"2026-05-30", icon:"🏠",
+   title:"Home portal and notification system overhaul",
+   summary:"Home portal rebuilt with a unified notification system pulling from five separate alert sources — rewards expiry, infrastructure health, iMessage listener, system events, and panic mode. Per-notification controls, weekly history grouping, and a medication and substance timer. The portal now functions as a real daily dashboard."},
+  {date:"2026-05-29", icon:"🔒",
+   title:"Private network fully migrated to a dedicated infrastructure account",
+   summary:"Moved the entire private network to a dedicated infrastructure-only account with stronger two-factor security. All seven devices re-enrolled. An automated monitor now watches for any new device joining the network and sends an alert within the hour — unauthorized access gets caught fast."},
+  {date:"2026-05-29", icon:"🚗",
+   title:"Combined vehicle dashboard",
+   summary:"Merged Audi and Lexus into one dashboard backed by structured data files. 74 verified service entries for the Audi, totaling over $29,000. Annual spend charts, category breakdowns, and a prioritized service queue. The same pattern scales to any vehicle."},
+  {date:"2026-05-28", icon:"📍",
+   title:"Data map rebuilt with folders, timeline, and GPS import",
+   summary:"Data visualization map rebuilt from scratch: mini calendar for date navigation, GPS clustering, album folders with hidden content protected by a security code, multi-select with bulk actions, and support for importing GPS tracks from hiking and navigation apps. Location data now flows in automatically and continuously. Photos to follow."},
+  {date:"2026-05-26", icon:"📊",
+   title:"Standardized dashboard design across all pages",
+   summary:"Every dashboard now shares the same header bar, navigation, refresh behavior, and security unlock pattern. A bulk-update script applies the standard to any new or existing page automatically. Consistency across 15+ dashboards without manual updates to each one."},
+  {date:"2026-05-25", icon:"😴",
+   title:"Recovery dashboard — charts, trends, and dual-source scoring",
+   summary:"Recovery dashboard expanded: 4-panel chart history with zoom, quality tier scoring, sleep architecture breakdown, sleep ring vs watch comparison view. Opening the dashboard fetches the latest data and presents a visual picker to select which sleep sessions to use — fast and accurate without requiring a fixed schedule."},
+  {date:"2026-05-25", icon:"☁️",
+   title:"Public status page live at status.a-i-me.com",
+   summary:"AiMe now has a public-facing status page accessible from the internet — not just from home. Routed through a secure tunnel with no ports opened on the home network. Anyone can see what the system does and what's currently running."},
   {date:"2026-05-24", icon:"🌐",
-   title:"Public status page + real-time API sprint",
-   summary:"Designed a dedicated public namespace for AiMe's status page with six new real-time API endpoints: live Kasa power draw, AI model status, Zyxel network flags, OS versions, and notification history. A Working Tools tab shows live system activity. Cloudflare Tunnel deployment is next."},
-  {date:"2026-05-23", icon:"📸",
-   title:"Photo map with GPS tagging",
-   summary:"Ingestion pipeline for photos and videos: GPS extraction, thumbnail generation, searchable map by location and album. All processing runs on home hardware — nothing sent externally. The first step toward local photo intelligence."},
+   title:"Real-time system API and public status dashboard",
+   summary:"Six new real-time data feeds: live power draw from smart outlets, AI model status, network device flags, operating system versions, service health, and notification history. A public dashboard shows live system activity. The home server now has a real API."},
+  {date:"2026-05-23", icon:"📍",
+   title:"Data map — GPS tagging and photo pipeline",
+   summary:"Ingestion pipeline for photos and videos: GPS extraction, thumbnail generation, searchable map by location and album. All processing runs on home hardware — nothing sent externally. First step toward a local location-aware data layer."},
   {date:"2026-05-23", icon:"🏠",
-   title:"Use-mode portal + router monitoring",
-   summary:"Daily-use landing page: quick links, GTD capture, one-glance system status. Zyxel router syslog now streaming to gateway — network events, WiFi changes, and device connections logged and searchable locally. No cloud involved."},
+   title:"Daily-use portal and network monitoring",
+   summary:"Landing page for daily use: quick links, task capture, one-glance system status. Home router now streams network events locally — device connections, WiFi changes, and network activity logged and searchable without any cloud service."},
   {date:"2026-05-22", icon:"😴",
-   title:"Compute sleep/wake automation",
-   summary:"Hibernation-safe shutdown sequence for the compute node: smart outlet coordination, Time Machine sync check, Wake-on-LAN from the Raspberry Pi over the mesh. No physical access needed to wake or sleep the inference laptop remotely."},
+   title:"Remote sleep and wake for the compute machine",
+   summary:"The heavy AI laptop can now be woken or put to sleep remotely, from anywhere on the private network. Smart outlet coordination, backup sync check before shutdown, and a network wake signal from the always-on mini computer. No physical access needed."},
   {date:"2026-05-22", icon:"🔧",
-   title:"Diagnostics overhaul + automated patching",
-   summary:"Diagnostics agent upgraded: CPU, memory, and uptime for all 4 nodes with a 5-minute watchdog. Automated patch applicator deployed — batch Find/Replace edits applied to master files via CLI, no manual copy-paste. Diff verifier tab catches mistakes before they commit."},
+   title:"Diagnostics overhaul and automated document patching",
+   summary:"Diagnostics upgraded: CPU, memory, and uptime tracked for all machines with a 5-minute automated watchdog. Bulk document patcher deployed — apply dozens of edits to master files via browser or command line, with preview and verification before anything commits."},
   {date:"2026-05-20", icon:"🃏",
-   title:"Statement automation + Kindle kiosk",
-   summary:"Chase bank statement → MS Money: download, convert, import — fully scripted. Kindle Fire kiosk portal deployed: touch-optimized dark HMI with live outlet controls, node status, and service health readable from the desk."},
+   title:"Statement automation and touch-screen kiosk",
+   summary:"Bank statement download, conversion, and import fully scripted. A Kindle Fire kiosk deployed as a touch-friendly always-on control panel: live power draw, machine status, and service health readable from the desk without picking up a phone."},
   {date:"2026-05-19", icon:"💗",
-   title:"Recovery scoring + Oura integration",
-   summary:"Daily recovery dashboard: HRV, sleep efficiency, readiness score, 7-day rolling debt. Oura ring API auto-pull at 8am every morning. Apple Watch shortcut as manual fallback when the ring isn't worn. First health data pipeline running fully automatically."},
+   title:"Recovery scoring and sleep ring integration",
+   summary:"Daily recovery dashboard: heart rate variability, sleep efficiency, readiness score, 7-day rolling fatigue debt. Sleep ring data brought in on demand when opening the dashboard, with a visual picker to select the right sessions. Apple Watch as manual fallback. First health data pipeline fully working."},
   {date:"2026-05-17", icon:"🚀",
-   title:"Public site + savings dashboard live",
-   summary:"a-i-me.com live on GitHub Pages. Routine savings dashboard shows ~5 work weeks reclaimed per year across 56 tracked tasks. 28 rewards programs and 18 travel credits loaded."},
+   title:"First public launch — site and savings dashboard",
+   summary:"a-i-me.com launched publicly for the first time. Routine savings dashboard shows roughly 5 work weeks reclaimed per year across 56 tracked tasks. 28 rewards programs and 18 travel credits loaded. The project had a name, a published philosophy, and a public presence."},
   {date:"2026-05-16", icon:"📁",
    title:"Live documentation viewer",
-   summary:"All architecture and ops files now readable from a live web interface on the home server. Changes visible in real time without downloading anything."},
+   summary:"All architecture and operations files readable from a live web interface on the home server. Changes visible in real time without downloading anything."},
   {date:"2026-05-15", icon:"💻",
-   title:"Windows machine back online",
-   summary:"The Samsung Galaxy Book (offline 108 days) restored and stabilized. MS Money installed and verified. The offline-first financial hub is active again."},
+   title:"Windows machine restored",
+   summary:"The Windows laptop (offline for months) restored and stabilized. Personal finance software installed and verified. The offline-first financial hub is active."},
   {date:"2026-05-14", icon:"⚡",
    title:"Power monitoring restored",
-   summary:"Fixed a 6-month outage caused by a stale IP address from a November network change. All 6 smart outlets now streaming watt data every 60 seconds."},
+   summary:"Fixed a 6-month outage caused by a stale address from a November network change. All 6 smart outlets now streaming wattage data every 60 seconds."},
   {date:"2026-05-12", icon:"🔒",
    title:"Data privacy policy formalized",
    summary:"Every piece of data classified by sensitivity. Clear rules for what external AI can see (infrastructure questions only) and what it can never see (finances, health, location — local only)."},
   {date:"2026-05-11", icon:"🤖",
    title:"AI answers your messages",
-   summary:"End-to-end: send a text to a designated number → home server routes it to a local AI model → reply arrives back in iMessage. Zero cloud APIs. Nothing leaves the network."},
+   summary:"End-to-end: send a text to a designated number → home server routes it to a local AI model → reply arrives back in the same thread. No external AI services. Nothing leaves the network."},
   {date:"2026-05-09", icon:"📊",
-   title:"All 6 dashboards deployed",
-   summary:"Routines, fitness, Audi, Lexus, rewards, and portal all live on the home server. Accessible from anywhere on the private mesh."},
+   title:"Initial dashboards deployed",
+   summary:"First round of dashboards — routines, fitness, Audi, Lexus, rewards, and portal — all live on the home server and accessible from anywhere on the private network. Many more to follow."},
   {date:"2026-05-09", icon:"📣",
    title:"First automated loop running",
-   summary:"Monthly system health check: SSH into each machine, verify status, send a notification. The first thing that fires on its own without being asked."},
+   summary:"Monthly system health check: connect to each machine, verify status, send a notification. The first thing that fires on its own without being asked."},
   {date:"2026-05-08", icon:"⚙️",
-   title:"Version control + sync workflow",
-   summary:"Every build session now commits to git automatically. Master files sync from phone to server. Nothing gets lost between sessions."},
+   title:"Version control and sync workflow",
+   summary:"Every build session now commits to a local version history automatically. Master files sync from phone to server. Nothing gets lost between sessions."},
   {date:"2026-05-08", icon:"🔐",
    title:"Security foundations locked",
-   summary:"Moved all two-factor authentication codes off Twilio (breached 2022) onto an end-to-end encrypted app. Registered a-i-me.com. Verified phone number can't be ported without a PIN."},
+   summary:"Moved all two-factor authentication codes off a compromised service onto an end-to-end encrypted app. Registered a-i-me.com. Verified phone number can't be transferred without a PIN."},
   {date:"2026-05-03", icon:"🌐",
-   title:"Published publicly",
-   summary:"Complete README written and published on GitHub. Project has a name, a philosophy, and a public presence."},
+   title:"Published publicly for the first time",
+   summary:"Complete README written and published on GitHub. Project had a name, a philosophy, and a public presence for the first time."},
   {date:"2026-04-30", icon:"📋",
    title:"Operating manual written",
-   summary:"Full workflow documentation: how to build this, how to run sessions, how to track what's been built. The project now has a real operating system, not just notes."},
+   summary:"Full workflow documentation: how to build this, how to run sessions, how to track what's been built. The project now had a real operating system, not just notes."},
   {date:"2026-04-25", icon:"📐",
    title:"System designed from scratch",
-   summary:"Built a complete architectural blueprint: roles, data flows, privacy rules, naming conventions. Gave the project a name: AiMe."},
+   summary:"Complete architectural blueprint: device roles, data flows, privacy rules, naming conventions. The project got a name: AiMe."},
   {date:"2026-04-08", icon:"🔌",
-   title:"Claude-era rebuild begins",
-   summary:"All machines reconnected and documented. Private mesh verified. This marks the start of the structured phase — the ChatGPT-era build (~1 year prior) wasn't systematically documented."},
+   title:"Structured rebuild begins",
+   summary:"All machines reconnected and documented. Private network verified. This marks the start of the disciplined phase — documentation and architecture first, then building."},
 ];
 
 const benefits = [
@@ -87,29 +113,29 @@ const benefits = [
     title:'Time back from recurring overhead',
     color:'#50cc80',
     status:'live',
-    stat:'~195 hrs/yr',
+    stat:'~200 hrs/yr',
     statNote:'at full deployment',
-    live:'~38 hrs/yr running automatically today',
+    live:'~40 hrs/yr running automatically today',
     points:[
-      '56 recurring tasks tracked: finance, travel, health, admin, home management',
+      '56 recurring tasks tracked: finance, travel, health, home management',
       'Most run automatically or fire a single-tap confirmation',
-      '≈ 5 forty-hour work weeks reclaimed per year at full deployment',
+      'Roughly 5 forty-hour work weeks reclaimed per year at full deployment',
       'Biggest wins: weekly cash flow review, monthly credit tracking, annual renewal reminders',
     ],
   },
   {
     icon:'💳',
-    title:'Card credits & rewards — nothing slips by',
+    title:'Card credits and rewards — nothing slips by',
     color:'#f59e0b',
     status:'live',
     stat:'28 programs',
-    statNote:'tracked, alerting daily at 7am',
+    statNote:'tracked, alerting daily',
     live:'18 flight/travel credits · 5 gift cards · 12 card benefits',
     points:[
-      'Daily 7am alert catches any expiry within 60 days before you notice',
+      'Daily alert catches any expiry within 60 days before you notice',
       'Tiered urgency: 60 days (heads up) → 30 days (act soon) → 7 days (urgent)',
-      'Amex Platinum, Chase, Capital One, Bilt, Citi — plus airline miles and hotel points',
-      'Live example: Saks credit ($50) ends permanently July 1, 2026 — AiMe flagged it months out',
+      'Points programs, airline miles, hotel stays, quarterly credits, and card perks',
+      'Example: a $50 credit ending permanently mid-2026 — flagged months out',
     ],
   },
   {
@@ -118,140 +144,163 @@ const benefits = [
     color:'#c09010',
     status:'live',
     stat:'2 vehicles',
-    statNote:'12yr Audi history analyzed',
-    live:'circuit-breaker priority model live',
+    statNote:'12yr history analyzed',
+    live:'priority model live for both vehicles',
     points:[
-      '2001 Audi A4 1.8T — 12 years of service history analyzed and prioritized',
-      '2003 Lexus ES300 — acquired recently, building the history log',
-      'Circuit-breaker model: "critical and overdue" vs "can wait" — not just a list of dates',
-      'Annual spend summary; safety-critical items flagged separately from cosmetic ones',
+      '2001 Audi A4 — 12 years of service history, over $29,000 documented',
+      '2003 Lexus ES300 — recently acquired, building the history log',
+      'Clear priority model: "needs attention now" vs "can wait" — not just a list of dates',
+      'Annual spend summary; safety-critical items flagged separately from cosmetic work',
     ],
   },
   {
     icon:'💪',
-    title:'Fitness tracking — years of data, one view',
+    title:'Workout tracking — full history, one view',
     color:'#d04878',
     status:'live',
     stat:'6+ years',
-    statNote:'25 training cycles tracked',
-    live:'full history 2019–2026',
+    statNote:'25 training cycles',
+    live:'full workout history 2019–2026',
     points:[
       'Complete strength training history from 2019 to present — nothing lost to app migrations',
-      'Training max trajectory with long-range trend — see where you\'re heading, not just where you\'ve been',
-      'AMRAP performance chart surfaces fatigue patterns and undertrained cycles',
-      'Session log with exception flags; qualitative notes alongside the numbers',
+      'Long-range trend shows where you are heading, not just where you have been',
+      'Performance chart surfaces fatigue patterns and undertrained cycles',
+      'Session log with notes alongside the numbers',
     ],
   },
   {
     icon:'💗',
-    title:'Recovery scoring — Oura + Apple Watch',
+    title:'Recovery scoring — sleep ring and watch',
     color:'#e05580',
     status:'live',
-    stat:'Daily auto-pull',
-    statNote:'8am every morning',
-    live:'HRV · sleep efficiency · readiness · 7-day rolling debt',
+    stat:'On-demand',
+    statNote:'opens with latest data ready',
+    live:'HRV · sleep efficiency · readiness · 7-day rolling fatigue debt',
     points:[
-      'Oura ring API auto-pull at 8am — HRV, sleep duration, efficiency, readiness score',
-      'Apple Watch shortcut as manual fallback when the ring isn\'t worn',
-      '14-day history strip + calendar month view; 7-day rolling debt tracks cumulative fatigue',
-      'No third-party app or subscription — raw API to local server, data stays on the mesh',
+      'Open the dashboard and the latest sleep data is fetched automatically',
+      'Visual picker to select the right sleep sessions — handles variable wake times correctly',
+      'Apple Watch as manual fallback when the ring is not worn',
+      '14-day history and monthly calendar view; rolling debt tracks cumulative fatigue',
+    ],
+  },
+  {
+    icon:'📍',
+    title:'Data map — location, photos, and GPS tracks',
+    color:'#3a7bd5',
+    status:'partial',
+    stat:'Location: live',
+    statNote:'photos: coming soon',
+    live:'continuous location tracking active · private photos already protected',
+    points:[
+      'Location data flows in automatically and continuously in the background',
+      'Photos placed on a map by where they were taken — GPS extraction and thumbnails built',
+      'GPS tracks from hiking and navigation apps can be imported directly',
+      'Private photos protected behind a time-limited security code',
+    ],
+  },
+  {
+    icon:'💊',
+    title:'Substance and medication timer',
+    color:'#8b5cf6',
+    status:'live',
+    stat:'Local only',
+    statNote:'never leaves the network',
+    live:'tap to start · elapsed time always visible',
+    points:[
+      'One tap starts a timer; elapsed time visible from any dashboard',
+      'Handles variable timing — based on when you actually took it, not a fixed schedule',
+      'Context-aware reminders when another dose may be needed',
+      'Completely private — no data leaves the home network',
     ],
   },
   {
     icon:'🤖',
     title:'Ask questions — get answers from your own data',
-    color:'#3a7bd5',
+    color:'#22c55e',
     status:'partial',
     stat:'Local AI',
     statNote:'no cloud, no subscriptions',
-    live:'iMessage PoC running — general questions today',
+    live:'iMessage assistant running — general questions today',
     points:[
-      'Text a question to a designated number → local AI answers → reply arrives in iMessage',
-      'DeepSeek R1 running on home hardware (14B on travel laptop, 32B on desktop)',
-      'Nothing leaves your home network — not even for the AI inference step',
-      'Goal: ask about finances, health history, car maintenance, travel — locally, from anywhere',
+      'Text a question to a designated number → local AI answers → reply in the same thread',
+      'Multiple AI models on home hardware: small one always on, large one woken on demand',
+      'Nothing leaves your home network — not even for the AI step',
+      'Goal: ask about finances, health history, car maintenance, travel — all locally',
     ],
   },
   {
     icon:'📊',
-    title:'Financial picture — offline, private, no third parties',
+    title:'Financial picture — private, no third parties',
     color:'#5a9ad5',
     status:'building',
-    stat:'MS Money',
-    statNote:'offline Windows app, local only',
-    live:'vault restored, catch-up in progress',
+    stat:'Offline software',
+    statNote:'all accounts since 2009',
+    live:'machine restored, catch-up in progress',
     points:[
-      'MS Money (offline app) — all accounts, investments, transactions since 2009',
+      'Offline personal finance software — all accounts, investments, transactions since 2009',
       'No bank credentials shared with anyone. Imports from downloaded statement files',
-      'Goal: ask "what are my tax lots?" or "what did I spend last quarter?" — locally',
-      'Net worth, cash flow, transaction history — queryable without leaving your network',
+      'Goal: ask "what are my tax lots?" or "what did I spend last quarter?" — answered locally',
+      'Net worth, cash flow, and transaction history — without leaving your network',
     ],
   },
 ];
 
 const trackers = [
-  {name:'Routine Dashboard',   url:'/gateway/routines/', status:'live',
+  {name:'Routine Dashboard', url:'/gateway/routines/', status:'live',
    why:'56 recurring tasks tracked — their cadence, automation state, and how much time they save per year.',
-   metric:'~195 hrs/yr at full deployment · ~38 hrs/yr live today'},
-  {name:'5/3/1 Training',      url:'/gateway/531/',      status:'live',
-   why:'6+ years of strength training data in one view. Long-range training max trajectory, AMRAP scatter chart, session log.',
-   metric:'25 cycles · Mar 2019 – Apr 2026'},
-  {name:'Audi Maintenance',    url:'/gateway/audi/',     status:'live',
-   why:'Circuit-breaker model for a 23-year-old car. What\'s critical vs what can wait, with 12 years of service history.',
-   metric:'12-year log · ~$27k documented'},
-  {name:'Lexus Maintenance',   url:'/gateway/lexus/',    status:'partial',
-   why:'Recently acquired. Same circuit-breaker model as Audi. Building the history log now.',
-   metric:'Log in progress'},
-  {name:'Rewards & Credits',   url:'/gateway/rewards/',  status:'partial',
-   why:'28 programs, 18 travel credits, 5 gift cards, 12 card benefits. Daily expiry alerts at 7am.',
+   metric:'~200 hrs/yr at full deployment · ~40 hrs/yr live today'},
+  {name:'Workout Log', url:'/gateway/531/', status:'live',
+   why:'6+ years of strength training in one view. Long-range progression trend, performance chart, session log.',
+   metric:'25 cycles · 2019–2026'},
+  {name:'Vehicle Dashboard', url:'/gateway/vehicles/', status:'live',
+   why:'Combined Audi and Lexus view. Priority model for what needs attention now vs what can wait. Full service history.',
+   metric:'12-year Audi log · $29k+ documented'},
+  {name:'Rewards and Credits', url:'/gateway/rewards/', status:'live',
+   why:'28 programs, 18 travel credits, 5 gift cards, 12 card benefits. Daily expiry alerts every morning.',
    metric:'28 programs · daily alerts'},
-  {name:'Trackers Portal',     url:'/gateway/trackers/', status:'live',
-   why:'Hub for all dashboards with live expiry summary on load.',
-   metric:'All trackers in one place'},
-  {name:'Recovery Dashboard',  url:'/gateway/recovery/', status:'live',
-   why:'Daily recovery score from Oura ring + Apple Watch: HRV, sleep efficiency, readiness, 7-day rolling debt. Oura API auto-pull at 8am. 14-day history strip with calendar month view.',
-   metric:'Phase 2b live · Oura + Watch · daily auto-ingest'},
-  {name:'Photo Map',           url:'/gateway/photo/',    status:'partial',
-   why:'GPS extraction from photos and videos, thumbnail pipeline, searchable map by location and album. Hidden filter for private content. Phase 2: breadcrumb trail overlay planned.',
-   metric:'Live · HEIC/JPEG/RAW/MOV supported'},
-  {name:'Browser History',     url:'/gateway/browser-capture/', status:'partial',
-   why:'Intentional tab captures via bookmarklet + Firefox SQLite history reader. T1 data — stays local, never leaves the mesh.',
-   metric:'Live · local only · T1 data'},
-  // ── Wishlist ──
-  {name:'Consumables Tracker', url:'', status:'wishlist',
-   why:'Track replacement dates and reorder timing for household consumables — toothbrush heads, batteries, subscriptions. Alert when due.',
-   metric:''},
-  {name:'Food Expiration Tracker', url:'', status:'wishlist',
-   why:'Track household food with purchase and expected expiry dates. Alert at 3 days before. Future: photo OCR via local vision model.',
-   metric:''},
-  {name:'GTD Capture Pipeline', url:'', status:'wishlist',
-   why:'Capture tasks via iMessage or voice, auto-classify with local AI, surface to appropriate context list. Replaces manual in-basket processing.',
-   metric:'Gate: Session C (iMessage triage)'},
-  {name:'Finance Dashboard',   url:'', status:'wishlist',
-   why:'MS Money + local AI: searchable financial history, cash flow projection, tax lots, portfolio. Local only — never external.',
-   metric:'Gate: Session D (RAG pipeline)'},
-  {name:'Serendipity Log',     url:'', status:'wishlist',
-   why:'Capture interesting connections and patterns over time. Append-only, eventually auto-populated by AiMe.',
-   metric:''},
+  {name:'Recovery Dashboard', url:'/gateway/recovery/', status:'live',
+   why:'Recovery score from sleep ring and Apple Watch on demand. Heart rate variability, sleep efficiency, readiness, 7-day rolling fatigue debt. Visual session picker for accurate data entry. 14-day history with monthly calendar.',
+   metric:'On-demand fetch · ring + watch · dual-source comparison'},
+  {name:'Home Portal', url:'/gateway/home/', status:'live',
+   why:'Daily-use landing page. System status, notifications from all alert sources, quick links, task capture, and substance/medication timer.',
+   metric:'5 notification sources · live'},
+  {name:'Data Map', url:'/gateway/photo/', status:'partial',
+   why:'Location data flowing in continuously. GPS-tagged photos on a map — album folders, date navigation, private photo protection, GPS track import from hiking apps. Photos to be added to the continuous feed soon.',
+   metric:'Location: live · photos: pipeline built, feed coming'},
+  {name:'Consumables Tracker', url:'/gateway/health/', status:'partial',
+   why:'Track replacement dates and reorder timing for household items — supplements, personal care, medications. Alert when due. Health portal houses this alongside other health tracking sections.',
+   metric:'9 items seeded · refill tracking live · alerts pending'},
+  {name:'Browser Captures', url:'/gateway/browser-capture/', status:'partial',
+   why:'Save and search browser tabs locally via bookmarklet. Full browsing history reader also built. Stays on the home network.',
+   metric:'Bookmarklet + history reader · local only · intentional saves today'},
+  {name:'Task Capture Pipeline', url:'', status:'wishlist',
+   why:'Capture tasks via text or voice, automatically sort by context, surface at the right time. Replaces manual in-basket processing.',
+   metric:'Needs: iMessage triage layer'},
+  {name:'Finance Dashboard', url:'', status:'wishlist',
+   why:'Personal finance software connected to local AI: searchable transaction history, cash flow, tax lots, portfolio view. Local only.',
+   metric:'Needs: AI reasoning pipeline'},
+  {name:'Nutrition and Hydration', url:'', status:'wishlist',
+   why:'Meal tracking, macros, hydration — connected to recovery scoring and fitness data.',
+   metric:'Needs: health portal Phase 2'},
 ];
 
 const roadmap = [
-  {phase:0, icon:'🔌', name:'Hardware & Mesh', status:'done', color:'#22c55e',
+  {phase:0, icon:'🔌', name:'Hardware and Network', status:'done', color:'#22c55e',
    headline:'All machines connected and talking to each other.',
-   what:'Built a private encrypted network across 5 home machines. Defined roles, documented everything, got the foundation solid.',
-   items:['Private mesh — 5 machines, always reachable','Always-on home server (M1 MacBook Air)','Raspberry Pi relay + smart power outlets','Windows laptop for MS Money + local AI','Travel laptop with offline AI fallback']},
-  {phase:1, icon:'⚡', name:'First Automations', status:'current', color:'#3b82f6',
-   headline:'The first loops are running. Things fire automatically.',
-   what:'Individual automations proven and deployed: alerts, monitors, dashboards. This is where AiMe starts saving time every day.',
-   items:['Daily reward expiry alerts (7am)','Daily system health check (6am)','Monthly maintenance automation','12 live dashboards and tools','iMessage AI — text a question, get a local answer','Recovery scoring (Oura + Apple Watch) — live']},
-  {phase:2, icon:'🧠', name:'Connected Intelligence', status:'upcoming', color:'#8b5cf6',
-   headline:'Ask questions about your own life. Get smart, local answers.',
-   what:'Pipelines connected end-to-end. Ask AiMe about your finances, health, travel, or calendar and get an answer from your own data — without touching a cloud service.',
-   items:['Search over email + financial records','Full iMessage conversational interface','MS Money automated catch-up','Public status via Cloudflare Tunnel (in progress)','Mac Mini M5 Pro — always-on inference (Aug 2026)']},
+   what:'Built a private encrypted network across home machines. Defined roles for each, documented everything, got the foundation solid.',
+   items:['Private network — 5 machines, always reachable','Always-on home server (MacBook Air)','Mini computer relay with smart power outlets','Windows laptop for finance software','Travel laptop with offline AI fallback']},
+  {phase:1, icon:'⚡', name:'First Automations', status:'done', color:'#22c55e',
+   headline:'The first loops are running. Things fire on their own.',
+   what:'Individual automations proven and deployed: alerts, monitors, dashboards. AiMe is saving real time every day. Phase 1 is substantially complete.',
+   items:['Daily reward expiry alerts','Daily system health check','Monthly maintenance automation','15+ live dashboards and tools','iMessage AI assistant','Recovery scoring — on-demand with session picker']},
+  {phase:2, icon:'🧠', name:'Connected Intelligence', status:'current', color:'#3b82f6',
+   headline:'Ask questions about your own life. Get answers from your own data.',
+   what:'Pipelines connected end-to-end. Ask about finances, health, travel, or calendar and get an answer from your own data — without touching a cloud service. AI reasoning pipeline design is locked and ready to build.',
+   items:['AI reasoning pipeline — design locked ✅','Search over email and financial records','Full iMessage conversational interface','Automated statement import','Mac upgrade for always-on heavy AI (Aug 2026)']},
   {phase:3, icon:'✨', name:'Proactive Intelligence', status:'future', color:'#f59e0b',
    headline:'AiMe acts before you have to think about it.',
-   what:'The system watches patterns and surfaces things proactively — not because it\'s scheduled, but because context makes it relevant right now.',
-   items:['Context-triggered alerts (not just time-based)','Location-aware notifications','Pattern recognition over personal history','Full data sovereignty — everything local','Surfaces things before you know you need them']},
+   what:"The system watches patterns and surfaces things before you realize you need them — not because it's scheduled, but because context makes it relevant right now.",
+   items:['Context-triggered alerts, not just time-based','Location-aware notifications','Pattern recognition over personal history','Full data sovereignty — everything local']},
 ];
 
 function AiMeStatus() {
@@ -264,7 +313,7 @@ function AiMeStatus() {
   return (
     <div style={{fontFamily:"-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",background:"#0d1117",color:"#e2e8f0",minHeight:"100vh",padding:"16px 20px",maxWidth:680,margin:"0 auto"}}>
 
-      {/* ── Header ── */}
+      {/* Header */}
       <div style={{marginBottom:24}}>
         <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:10}}>
           <span style={{fontSize:30}}>⚡</span>
@@ -274,19 +323,17 @@ function AiMeStatus() {
           </div>
         </div>
 
-        {/* Hero */}
         <div style={{background:'linear-gradient(135deg,#0f2a1a,#0f1a30)',border:'1px solid #1a5a3a',borderRadius:10,padding:'14px 18px',marginBottom:12}}>
-          <div style={{fontSize:20,fontWeight:700,color:'#50cc80',marginBottom:3}}>≈ 5 work weeks reclaimed per year</div>
-          <div style={{fontSize:12,color:'#64748b',lineHeight:1.5}}>from 56 recurring tasks — at full deployment.<br/>~38 hrs/yr running automatically today.</div>
+          <div style={{fontSize:20,fontWeight:700,color:'#50cc80',marginBottom:3}}>~200 hrs/yr reclaimed from recurring overhead</div>
+          <div style={{fontSize:12,color:'#64748b',lineHeight:1.5}}>from 56 tracked tasks — at full deployment.<br/>~40 hrs/yr running automatically today.</div>
         </div>
 
-        {/* Stats */}
         <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:8}}>
           {[
-            {v:'56',  l:'routines tracked',   s:'finance, health, travel'},
-            {v:'12',  l:'live dashboards',    s:'on home server'},
-            {v:'3',   l:'local AI models',    s:'no cloud, no subscriptions'},
-            {v:'~40', l:'build sessions',     s:'since April 2026'},
+            {v:'56',  l:'routines tracked',  s:'finance, health, travel'},
+            {v:'15+', l:'live dashboards',   s:'on home server'},
+            {v:'3',   l:'local AI models',   s:'no cloud, no subscriptions'},
+            {v:'~55', l:'build sessions',    s:'since April 2026'},
           ].map(c=>(
             <div key={c.l} style={{background:'#161b22',border:'1px solid #21262d',borderRadius:8,padding:'10px 12px'}}>
               <div style={{fontSize:22,fontWeight:700}}>{c.v}</div>
@@ -297,19 +344,19 @@ function AiMeStatus() {
         </div>
       </div>
 
-      {/* ── Tabs ── */}
+      {/* Tabs */}
       <div style={{display:'flex',gap:1,marginBottom:18,borderBottom:'1px solid #21262d',overflowX:'auto'}}>
         {[
           ['benefits','⚡ What It Does'],
           ['progress','📅 How It Was Built'],
-          ['trackers','📊 Apps'],
+          ['trackers','📊 Tools'],
           ['next',    "🗺 What's Next"],
         ].map(([id,label])=>(
           <button key={id} onClick={()=>setTab(id)} style={{background:'none',border:'none',borderBottom:tab===id?'2px solid #3b82f6':'2px solid transparent',color:tab===id?'#e2e8f0':'#64748b',padding:'6px 14px',cursor:'pointer',fontSize:12,fontWeight:tab===id?600:400,whiteSpace:'nowrap',flexShrink:0}}>{label}</button>
         ))}
       </div>
 
-      {/* ── What It Does ── */}
+      {/* What It Does */}
       {tab==='benefits' && (
         <div>
           <div style={{fontSize:12,color:'#475569',marginBottom:14,lineHeight:1.6}}>
@@ -358,35 +405,34 @@ function AiMeStatus() {
           })}
           <div style={{marginTop:14,background:'#161b22',border:'1px solid #21262d',borderRadius:8,padding:'12px 16px',fontSize:11,color:'#64748b',lineHeight:1.7}}>
             <span style={{color:'#475569',fontWeight:600}}>How it works: </span>
-            A private network (Tailscale) connects 5 home machines. The always-on MacBook Air handles routing, dashboards, and lightweight AI. A 32GB MacBook Pro handles heavier AI on demand. AI inference runs on local hardware — DeepSeek R1, not a cloud subscription. Personal data never routes through anyone else's servers.
+            A private encrypted network connects home machines. The always-on MacBook Air handles routing, dashboards, and lightweight AI. A more powerful laptop handles deeper AI work on demand. All AI inference runs on home hardware — nothing goes to a cloud subscription. Personal data never routes through anyone else's servers.
           </div>
         </div>
       )}
 
-      {/* ── How It Was Built ── */}
+      {/* How It Was Built */}
       {tab==='progress' && (
         <div>
           <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10}}>
-            <div style={{fontSize:11,color:'#475569'}}>{milestones.length} milestones · ~40 build sessions</div>
+            <div style={{fontSize:11,color:'#475569'}}>{milestones.length} milestones · ~55 build sessions</div>
             <button onClick={()=>setShowAll(!showAll)} style={{background:'none',border:'1px solid #21262d',color:'#64748b',padding:'3px 9px',borderRadius:4,cursor:'pointer',fontSize:10,fontFamily:'inherit'}}>
               {showAll ? 'Show recent' : `All ${milestones.length}`}
             </button>
           </div>
 
-          {/* Build arc */}
           <div style={{background:'#0f1f40',border:'1px solid #1d4ed844',borderRadius:8,padding:'12px 14px',marginBottom:14,fontSize:11,lineHeight:1.8}}>
-            <div style={{color:'#93c5fd',fontWeight:700,marginBottom:8}}>📈 The arc</div>
+            <div style={{color:'#93c5fd',fontWeight:700,marginBottom:8}}>📈 How the build evolved</div>
             <div style={{marginBottom:6}}>
-              <span style={{color:'#8a9ab8',fontWeight:600}}>Phase 1 — ChatGPT era:</span>
-              <span style={{color:'#64748b'}}> A year of learning by doing. Scripts scattered everywhere, nothing documented, sessions started from scratch every time. Useful individual outputs, but nothing survived a context reset.</span>
+              <span style={{color:'#8a9ab8',fontWeight:600}}>Year one — building without a system: </span>
+              <span style={{color:'#64748b'}}>Useful individual outputs — scripts, dashboards, automations — but no shared foundation. Every session started from scratch. Decisions got repeated, names drifted, nothing survived a context reset. A lot of effort for limited compounding.</span>
             </div>
             <div style={{marginBottom:6}}>
-              <span style={{color:'#8a9ab8',fontWeight:600}}>Phase 2 — Regrouped with Claude:</span>
-              <span style={{color:'#64748b'}}> Stopped building randomly, started designing. Master files, session ritual, git versioning, data classification policy. Every session now survives a context window reset. Documentation and architecture first.</span>
+              <span style={{color:'#8a9ab8',fontWeight:600}}>The shift — documentation and architecture first: </span>
+              <span style={{color:'#64748b'}}>Stopped building randomly, started designing. Master files, session discipline, version control, data privacy policy. Every session now starts from a known state and ends with a committed record. The foundation became the accelerant.</span>
             </div>
             <div>
-              <span style={{color:'#93c5fd',fontWeight:600}}>Phase 3 (now) — Building fast:</span>
-              <span style={{color:'#64748b'}}> Pieces snapping into place. Every session ships something, and each build adds to a system that remembers itself.</span>
+              <span style={{color:'#93c5fd',fontWeight:600}}>Now — building fast: </span>
+              <span style={{color:'#64748b'}}>Each session ships something real. Pieces connect because the design is clear. The documented system is what makes speed possible — not any particular tool.</span>
             </div>
           </div>
 
@@ -410,33 +456,32 @@ function AiMeStatus() {
           {!showAll && milestones.length > 7 && (
             <div style={{textAlign:'center',marginTop:6}}>
               <button onClick={()=>setShowAll(true)} style={{background:'none',border:'1px solid #21262d',color:'#64748b',padding:'6px 16px',borderRadius:4,cursor:'pointer',fontSize:11,fontFamily:'inherit'}}>
-                + {milestones.length - 7} older milestones
+                + {milestones.length - 7} earlier milestones
               </button>
             </div>
           )}
         </div>
       )}
 
-      {/* ── Your Trackers ── */}
+      {/* Tools */}
       {tab==='trackers' && (
         <div>
           <div style={{fontSize:11,color:'#475569',marginBottom:10}}>
-          12 live dashboards and tools on the home server · accessible from anywhere on the private mesh
+            15+ live dashboards and tools on the home server · accessible from anywhere on the private network
           </div>
 
           <div style={{background:'#0f1a30',border:'1px solid #1d3a6a',borderRadius:8,padding:'12px 16px',marginBottom:14,fontSize:11,color:'#64748b',lineHeight:1.6}}>
             <span style={{color:'#3a7bd5',fontWeight:600}}>🔔 Notifications: </span>
-            Installed trackers actively monitor for expiry dates, maintenance thresholds, and action-needed triggers — not just display. Rewards expiry alerts fire daily at 7am, tiered by urgency. Car maintenance flags overdue items at key milestones. Recovery scoring runs at 8am automatically from Oura ring data.
+            Installed tools actively monitor for expiry dates, maintenance thresholds, and action-needed triggers — not just display data. Rewards expiry alerts fire daily, tiered by urgency. Vehicle maintenance flags overdue items. Recovery scoring available on demand.
           </div>
 
-          {/* Live / partial */}
           {trackers.filter(t => t.status !== 'wishlist').map(t=>{
             const cfg = t.status==='live'
               ? {bg:'#0f2a1a',bd:'#16a34a',c:'#86efac',label:'Live'}
               : {bg:'#1a1505',bd:'#d97706',c:'#fcd34d',label:'Partial'};
             return (
               <div key={t.name} style={{background:'#161b22',borderRadius:8,padding:'13px 16px',marginBottom:8,border:'1px solid #21262d'}}>
-                <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:12}}>
+                <div style={{display:'flex',alignItems:'flex-start',gap:12}}>
                   <div style={{flex:1,minWidth:0}}>
                     <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:4}}>
                       <span style={{background:cfg.bg,color:cfg.c,border:`1px solid ${cfg.bd}`,fontSize:9,fontWeight:600,padding:'1px 6px',borderRadius:3,flexShrink:0}}>{cfg.label}</span>
@@ -445,40 +490,36 @@ function AiMeStatus() {
                     <div style={{fontSize:11,color:'#64748b',lineHeight:1.5,marginBottom:4}}>{t.why}</div>
                     <div style={{fontSize:10,color:'#475569'}}>{t.metric}</div>
                   </div>
-                  {t.url && <code style={{fontSize:10,color:'#334155',flexShrink:0,marginTop:2}}>{t.url}</code>}
                 </div>
               </div>
             );
           })}
 
-          {/* Wishlist separator */}
           <div style={{display:'flex',alignItems:'center',gap:10,margin:'14px 0 10px'}}>
             <div style={{flex:1,height:1,background:'#1e2a3a'}}/>
-            <span style={{fontSize:9,color:'#334155',letterSpacing:'2px',textTransform:'uppercase',whiteSpace:'nowrap'}}>Planned — wishlist</span>
+            <span style={{fontSize:9,color:'#334155',letterSpacing:'2px',textTransform:'uppercase',whiteSpace:'nowrap'}}>Planned</span>
             <div style={{flex:1,height:1,background:'#1e2a3a'}}/>
           </div>
 
           {trackers.filter(t => t.status === 'wishlist').map(t=>(
             <div key={t.name} style={{background:'#0f1117',borderRadius:8,padding:'11px 14px',marginBottom:6,border:'1px solid #1a2030',opacity:0.7}}>
-              <div style={{display:'flex',alignItems:'flex-start',gap:10}}>
-                <div style={{flex:1,minWidth:0}}>
-                  <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:3}}>
-                    <span style={{background:'#0d1117',color:'#334155',border:'1px solid #1e2a3a',fontSize:9,fontWeight:600,padding:'1px 6px',borderRadius:3,flexShrink:0}}>📋 Planned</span>
-                    <span style={{fontWeight:600,fontSize:12,color:'#5a7090'}}>{t.name}</span>
-                  </div>
-                  <div style={{fontSize:10,color:'#475569',lineHeight:1.5,marginBottom:t.metric?3:0}}>{t.why}</div>
-                  {t.metric && <div style={{fontSize:9,color:'#334155'}}>{t.metric}</div>}
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:3}}>
+                  <span style={{background:'#0d1117',color:'#334155',border:'1px solid #1e2a3a',fontSize:9,fontWeight:600,padding:'1px 6px',borderRadius:3,flexShrink:0}}>Planned</span>
+                  <span style={{fontWeight:600,fontSize:12,color:'#5a7090'}}>{t.name}</span>
                 </div>
+                <div style={{fontSize:10,color:'#475569',lineHeight:1.5,marginBottom:t.metric?3:0}}>{t.why}</div>
+                {t.metric && <div style={{fontSize:9,color:'#334155'}}>{t.metric}</div>}
               </div>
             </div>
           ))}
         </div>
       )}
 
-      {/* ── What's Next ── */}
+      {/* What's Next */}
       {tab==='next' && (
         <div>
-          <div style={{fontSize:11,color:'#475569',marginBottom:14}}>4 phases from connected hardware to full personal AI — currently in Phase 1</div>
+          <div style={{fontSize:11,color:'#475569',marginBottom:14}}>4 phases from connected hardware to full personal AI — Phase 1 substantially complete, Phase 2 beginning</div>
           {roadmap.map(r=>{
             const cfg = r.status==='done'
               ? {bg:'#0f2a1a',bd:'#16a34a',badge:'#86efac',label:'✅ Complete'}
@@ -508,9 +549,9 @@ function AiMeStatus() {
         </div>
       )}
 
-      {/* ── Persistent footer ── */}
+      {/* Footer */}
       <div style={{marginTop:20,paddingTop:16,borderTop:'1px solid #21262d',fontSize:11,color:'#64748b',lineHeight:1.6,display:'flex',flexWrap:'wrap',alignItems:'baseline',justifyContent:'space-between',gap:6}}>
-        <span><span style={{fontWeight:600,color:'#94a3b8'}}>AiMe</span> — personal AI infrastructure. Open source. No cloud subscription. Built by one person, a few hours at a time.</span>
+        <span><span style={{fontWeight:600,color:'#94a3b8'}}>AiMe</span> — personal AI infrastructure. Open source. No cloud subscription. Built by one person, a few hours at a time. Written with help from Claude.</span>
         <a href="https://github.com/tandrew101/a-i-me" style={{color:'#3b82f6',textDecoration:'none',whiteSpace:'nowrap'}}>github.com/tandrew101/a-i-me</a>
       </div>
 
